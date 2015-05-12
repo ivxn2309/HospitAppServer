@@ -21,3 +21,19 @@ public class DoctorManager {
         dc.create(doctor);
         return doctor.username;
     }
+    /**
+     * Este metodo permite asignar un horario a un doctor, primero verifica que
+     * el doctor no tenga ese horario asignado.
+     * @param schedule corresponde al horario que se asignara a una entidad de tipo Doctor
+     * @return un valor entero que corresponde a -1 si no se pudo completar la
+     * operacion o schedule.idSchedule si la operacion se realizo correctamente.
+     */
+    public int setSchedule(Scheudle schedule){
+        ScheduleFacadeREST sf = new ScheduleFacadeREST();
+        if(sf.find(schedule.idSchedule) =! null){
+            return -1;
+        }
+        sf.create(schedule);
+        return schedule.idSchedule;
+    }
+}
