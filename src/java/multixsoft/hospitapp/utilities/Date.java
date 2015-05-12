@@ -8,7 +8,6 @@ import java.util.Calendar;
  * @date 12/May/2015
  */
 public class Date {
-
     private int dia;
     private int mes;
     private int year;
@@ -17,6 +16,7 @@ public class Date {
         dia = calendar.get(Calendar.DATE);
         mes = calendar.get(Calendar.MONTH) + 1;
         year = calendar.get(Calendar.YEAR);
+        
     }
 
     public Date(int dia, int mes, int year) {
@@ -114,6 +114,18 @@ public class Date {
     @Override
     public String toString() {
         return dia + "/" + getSpanishMonth(mes) + "/" + year;
+    }
+    
+    public boolean belongsThisWeek() {
+        Calendar beginWeek = Calendar.getInstance();
+        Calendar endWeek = Calendar.getInstance();
+        beginWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        endWeek.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+        
+        if(this.isAfter(new Date(beginWeek))) {
+            return this.isBefore(new Date(endWeek));
+        }
+        return false;
     }
     
     public String toFormattedString(String format) {
