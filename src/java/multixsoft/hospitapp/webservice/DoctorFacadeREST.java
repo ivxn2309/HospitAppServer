@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,7 +18,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import multixsoft.hospitapp.entities.Appointment;
 import multixsoft.hospitapp.entities.Doctor;
+import multixsoft.hospitapp.utilities.Date;
 
 /**
  *
@@ -79,6 +82,15 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
     @Produces("text/plain")
     public String countREST() {
         return String.valueOf(super.count());
+    }
+    
+    public List<Appointment> getAllApointmentsFor(Doctor doctor, Date date){
+        String sql = "SELECT * FROM Appointment WHERE doctorUsername = :usrn AND"
+                + " date = :d AND isFinished is false";
+        Query query = getEntityManager().createQuery(sql).setParameter("usrn", doctor.getUsername())
+                .setParameter("d", date.toString());
+        List<Appointment> apps = query.getResultList();
+        return apps;
     }
 
     @Override
