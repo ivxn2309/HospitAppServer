@@ -85,5 +85,16 @@ public class PatientFacadeREST extends AbstractFacade<Patient> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
+
+    /* Retrieve all the appointments unfinished associated with the patient*/
+    public List<Appointment> getUnfinishedAppointments(Patient patient){
+        String sql = "SELECT * FROM Appointment WHERE patientNss = :pnss AND"
+                + " AND isFinished is false";
+        Query query = getEntityManager().createQuery(sql).setParameter("pnss", patient.getNss());
+
+        List<Appointment> appointments = query.getResultList();
+        return appointments;
+    }
+
 }

@@ -16,6 +16,7 @@ import multixsoft.hospitapp.webservice.ScheduleFacadeREST;
  * @author maritza
  */
 public class ScheduleManager {
+
     AppointmentFacadeREST appointmentManagement;
     PatientFacadeREST patientManagement;
     DoctorFacadeREST doctorManagement;
@@ -159,10 +160,40 @@ public class ScheduleManager {
         for(Appointment appointment : doctorAppointments){
             if(appointment.getDate().belongsThisWeek()){
                 /* remover intervalo de tiempo de appointment a Schedule de acuerdo al día  */
+                int day = appointment.getDate().getDayOfWeek();
+                String appointmentTime =  appointment.getTime()
+                private int[] = extractInterval()
+
             }
         }
 
 
+    }
+
+    private int[] removeIntervals(int[] firstInterval, String secondInterval){
+        int[] finalInterval= new int[firstInterval.length];
+        for(i=0; i<secondInterval.length; i++){
+            for(int i=0; i<firstInterval.length; i++){
+                    if( firstInterval[i] != secondInterval){
+                        finalIntervak[i]
+                    }
+            }
+        }
+    }
+
+    
+
+    private int[] extractInterval(String timeInterval, int dayWeek){
+        String[] intervalDays = timeInterval.split(";");
+        int especifiedDayWeek = dayWeek-2;
+        String hoursInterval = intervalDays[lastDayWeek];
+        String[] hours = hoursInterval.split(",");
+        int[] lastInterval= new int[hours.length];
+
+       for( int i=0; i<hours; i++){
+        lastInterval[i]=Integer.parseInt(hours[i]);
+       }
+       return lastInterval;
     }
 
     /* compara si dos appointments tienen el mismo paciente y fecha */
