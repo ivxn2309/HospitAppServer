@@ -85,5 +85,23 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
     protected EntityManager getEntityManager() {
         return em;
     }
+
+
+    public Schedule getDoctorSchedule(Doctor doctor){
+        String sql = "SELECT * FROM Schedule WHERE doctorUsername = :usrn";
+        Query query = getEntityManager().createQuery(sql).setParameter("usrn", doctor.getUsername());
+        Schedule doctorSchedule = query.getSingleResult();
+        return doctorSchedule;
+    }
+
+
+    public List<Appointment> getDoctorUnFinishedAppointments(Doctor doctor){
+        String sql = "SELECT * FROM Appointment WHERE doctorUsername = :usrn AND"
+                + " AND isFinished is false";
+        Query query = getEntityManager().createQuery(sql).setParameter("usrn", doctor.getUsername());
+    
+        List<Appointment> appointments = query.getResultList();
+        return appointments;
+    }
     
 }
