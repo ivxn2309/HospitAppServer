@@ -9,7 +9,7 @@ import java.util.Collections;
 public class ParserInterval{
 
 
-	public List<Integer> removeUnavailableScheduleIntervals(String scheduleInterval, 
+	public List<Integer> removeScheduleIntervals(String scheduleInterval, 
 		String appointmentInterval, int day){
 		
 		String weekScheduleInterval = extractIntervalsWithDate(scheduleInterval, day);
