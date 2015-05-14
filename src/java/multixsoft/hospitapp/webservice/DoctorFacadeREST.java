@@ -95,7 +95,7 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
     }
 
 
-    public List<Appointment> getDoctorUnFinishedAppointments(Doctor doctor){
+    public List<Appointment> getDoctorUnfinishedAppointments(Doctor doctor){
         String sql = "SELECT * FROM Appointment WHERE doctorUsername = :usrn AND"
                 + " AND isFinished is false";
         Query query = getEntityManager().createQuery(sql).setParameter("usrn", doctor.getUsername());
@@ -103,5 +103,7 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
         List<Appointment> appointments = query.getResultList();
         return appointments;
     }
+
+    
     
 }

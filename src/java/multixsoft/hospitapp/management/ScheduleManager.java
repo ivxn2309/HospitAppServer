@@ -34,21 +34,17 @@ public class ScheduleManager {
             appointment.setIscanceled(true);
             appointmentManagement.edit(appointment.getIdAppointment(), appointment);
             return true;
-
         }catch(Exception e){
             return false;
         }
     }
     
 
-    /* Función para calendarizar cita */
     public long scheduleAppointment(Appointment appointment){
         appointment = appointmentManagement.find(appointment.getIdAppointment());
-        
         Patient patient = patientManagement.find(appointment.getPatientNss());
         Doctor doctor = doctorManagement.find(appointment.getDoctorUsername());
 
-        //se incializa con la fecha actual
         Date date = new Date();
         if(date.isBefore(appointment.getDate()) || patient == null || doctor == null 
             || compareAppointmentByPatientAndDate(appointment)){
@@ -60,7 +56,6 @@ public class ScheduleManager {
     }
 
 
-    /* Función para marcar una cita como concluida */
     public boolean setAppointmentFinish(Appointment appointment){
         boolean isCompleteOperation=false;
 
@@ -75,47 +70,17 @@ public class ScheduleManager {
         return isCompleteOperation;
     }
 
-    /* Obtener todas las citas para un doctor y fecha en especifico */
-
-    public List<Appointment> getAllAppointmentsFor(Doctor doctor, Date date){
-        doctor = doctorManagement.find(doctor.getUsername());
-
-        if(doctor == null){
-            return null;
-        }
-
-        List<Appointment> currentAppointments = appointmentManagement.findAll();
-        List<Appointment> doctorAppointments = new ArrayList<Appointment>();
-
-        for(Appointment appointment : currentAppointments){
-            /* si tienen el mismo doctor y fecha agregarlas a la lista */
-            if(appointment.getDoctorUsername() == doctor.getUsername() && date.equals(appointment.getDate()) && appointment.setIsFinished(false)){
-                doctorAppointments.add(appointment);
-            }
-        }
-        return doctorAppointments;
-    }
-
-
-
 
     /* Conseguir todas las citas para un paciente dado */
     public Appointment getNextAppointment(Patient patient){
         patient = new PatientFacadeREST.find(patient.getPatientNss());
-
-        List<Appointment> currentAppointments = appointmentManagement.findAll();
-        List<Appointment> patientAppointments = new ArrayList<Appointment>();
-
-        for(Appointment appointment : currentAppointments){
-            if(appointment.getPatientNss() == patient.getNss() && appointment.getIsFinished() == false){
-                patientAppointments.add(appointment);
-            }
-        }
+        
+        List<Appointment> patientAppointments = 
+        patientManagement.getUnfinishedAppointments(patient);
 
         if(patientAppointments == null || patientAppointments.isEmpty()){
             return null;
         }
-
         Appointment nextAppointment = patientAppointments.get(0);
 
         for(Appointment appointment : patientAppointments){
@@ -123,77 +88,52 @@ public class ScheduleManager {
                 nextAppointment = appointment;
             }
         }
-
         return nextAppointment;
     }
 
 
     public Schedule getAvailableSchedule(Doctor doctor, boolean original){
         doctor = new DoctorFacadeREST.find(doctor.getUsername());
-
         if(doctor == null){
             return null;
         }
 
-        List<Schedule> actualSchedules = new ScheduleFacadeREST().findAll();
-        Schedule doctorSchedule = null;
-
-        for(Schedule schedule : actualSchedules){
-            if(schedule.getDoctorUsername().getUsername() == doctor.getUsername()){
-                doctorSchedule = schedule;
-            }
-        }
+        Schedule doctorSchedule = doctorManagement.getDoctorSchedule();
 
         if(original){
             return doctorSchedule;
         }
 
-        List<Appointment> actualAppointments = appointmentManagement.findAll();
-        List<Appointment> doctorAppointments = new ArrayList<Appointment>();
+        List<Appointment> doctorAppointments = 
+        doctorManagement.getUnfinishedAppointments(doctor);
 
-        for(Appointment appointment : actualAppointments){
-            if(appointment.getDoctorUsername().getUsername() == doctor.getUsername() && appointment.getIsFinished() == false){
-                doctorAppointments.add(appointment);
-            }
-        }
-
+        IntervalFilter intervalFilter = new IntervalFilter();
         for(Appointment appointment : doctorAppointments){
             if(appointment.getDate().belongsThisWeek()){
-                /* remover intervalo de tiempo de appointment a Schedule de acuerdo al día  */
+                
                 int day = appointment.getDate().getDayOfWeek();
-                String appointmentTime =  appointment.getTime()
-                private int[] = extractInterval()
-
-            }
-        }
-
-
-    }
-
-    private int[] removeIntervals(int[] firstInterval, String secondInterval){
-        int[] finalInterval= new int[firstInterval.length];
-        for(i=0; i<secondInterval.length; i++){
-            for(int i=0; i<firstInterval.length; i++){
-                    if( firstInterval[i] != secondInterval){
-                        finalIntervak[i]
-                    }
+                int appointmentTime = Integer.parseInt(appointment.getTime());
+                String scheduleTime = scheduleIntervalByDay(doctorSchedule, day);
+                intervalFilter.removeInterval(appointmentTime, scheduleTime);
+                
             }
         }
     }
 
-    
-
-    private int[] extractInterval(String timeInterval, int dayWeek){
-        String[] intervalDays = timeInterval.split(";");
-        int especifiedDayWeek = dayWeek-2;
-        String hoursInterval = intervalDays[lastDayWeek];
-        String[] hours = hoursInterval.split(",");
-        int[] lastInterval= new int[hours.length];
-
-       for( int i=0; i<hours; i++){
-        lastInterval[i]=Integer.parseInt(hours[i]);
-       }
-       return lastInterval;
+    private String scheduleIntervalByDay(Schedule schedule, int day){
+        if(day == 2){
+            return schedule.getMonday();
+        }else if(day == 3){
+            return schedule.getTuesday();
+        }else if(day == 4){
+            return schedule.getWednesday();
+        }else if(day == 5){
+            return schedule.getThursday();
+        }else if(day == 6){
+            return schedule.getFriday();
+        }else{
+            return -1;
+        }
     }
 
     /* compara si dos appointments tienen el mismo paciente y fecha */
