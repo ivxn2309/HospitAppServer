@@ -1,26 +1,34 @@
 package multixsoft.hospitapp.management;
 
-import multixsoft.hospitapp.entities.Doctor;
-import multixsoft.hospitapp.entities.Patient;
-import multixsoft.hospitapp.webservice.DoctorFacadeREST;
-import multixsoft.hospitapp.webservice.PatientFacadeREST;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.Path;
 
 /**
+ * REST Web Service
  * @author Ivan Tovar
  * @version 1.0
  * @date 12/May/2015
  */
+@Path("patientmapper")
 public class PatientMapper {
-    public boolean mapPatient(Patient patient, Doctor doctor) {
-        patient = new PatientFacadeREST().find(patient.getNss());
-        doctor = new DoctorFacadeREST().find(doctor.getUsername());
-        if (patient == null) {
-            return false;
-        }
-        if (doctor == null) {
-            return false;
-        }
-        patient.setDoctorUsername(doctor);
-        return true;
+
+    @Context
+    private UriInfo context;
+
+    public PatientMapper() {
     }
+/*
+    @GET
+    @Produces("application/json")
+    public String getJson() {
+        //TODO return proper representation object
+        throw new UnsupportedOperationException();
+    }
+
+    @PUT
+    @Consumes("application/json")
+    public void putJson(String content) {
+    }
+    */
 }

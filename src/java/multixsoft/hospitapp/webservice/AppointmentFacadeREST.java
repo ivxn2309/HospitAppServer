@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,14 +18,17 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import multixsoft.hospitapp.entities.Appointment;
+import multixsoft.hospitapp.entities.Doctor;
+import multixsoft.hospitapp.utilities.Date;
 
 /**
  *
  * @author Ivan Tovar
  */
 @Stateless
-@Path("multixsoft.hospitapp.entities.appointment")
+@Path("appointment")
 public class AppointmentFacadeREST extends AbstractFacade<Appointment> {
     @PersistenceContext(unitName = "HospitAppServerPU")
     private EntityManager em;
@@ -79,6 +83,22 @@ public class AppointmentFacadeREST extends AbstractFacade<Appointment> {
     @Produces("text/plain")
     public String countREST() {
         return String.valueOf(super.count());
+    }
+    
+    @GET
+    @Path("/appointmentsfor")
+    @Produces("application/json")
+    public List<Appointment> getAllAppointmentsFor(
+            @QueryParam("username") String usrn, @QueryParam("date") String date) {
+        int dia = Integer.parseInt(date.split("/")[0]);
+        int mes = Integer.parseInt(date.split("/")[1]);
+        int year = Integer.parseInt(date.split("/")[2]);
+        String sql = "SELECT a FROM Appointment a WHERE a.doctorUsername = :usrn AND"
+                + " a.date = :d";
+        Query query = getEntityManager().createQuery(sql).setParameter("usrn", new Doctor(usrn))
+                .setParameter("d", new Date(dia, mes, year).getTime());
+        List<Appointment> apps = query.getResultList();
+        return apps;
     }
 
     @Override

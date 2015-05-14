@@ -11,18 +11,23 @@ public class Date {
     private int dia;
     private int mes;
     private int year;
+    private Calendar calendar;
 
     public Date(Calendar calendar) {
         dia = calendar.get(Calendar.DATE);
         mes = calendar.get(Calendar.MONTH) + 1;
         year = calendar.get(Calendar.YEAR);
-        
+        this.calendar = calendar;
     }
 
     public Date(int dia, int mes, int year) {
         this.dia = dia;
         this.mes = mes;
         this.year = year;
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, dia);
+        calendar.set(Calendar.MONTH, mes);
+        calendar.set(Calendar.YEAR, year);
     }
 
     public boolean isBefore(Date date) {
@@ -109,6 +114,10 @@ public class Date {
 
     public void setYear(int year) {
         this.year = year;
+    }
+    
+    public java.util.Date getTime() {
+        return calendar.getTime();
     }
 
     @Override
