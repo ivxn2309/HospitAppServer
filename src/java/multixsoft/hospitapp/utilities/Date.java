@@ -119,6 +119,10 @@ public class Date {
     public java.util.Date getTime() {
         return calendar.getTime();
     }
+    
+    public int getDayOfWeek() {
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
 
     @Override
     public String toString() {
