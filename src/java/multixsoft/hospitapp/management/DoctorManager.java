@@ -1,39 +1,54 @@
-package multixsoft.hospitapp.managment;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package multixsoft.hospitapp.management;
+
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
 
 /**
+ * REST Web Service
  *
- * @author Yonathan Alexander Martínez Padilla
+ * @author YONY
  */
+@Path("doctormanager")
 public class DoctorManager {
-    
+
+    @Context
+    private UriInfo context;
+
     /**
-     * Este metodo permite guardar un nuevo doctor en la base de datos
-     * primero verifica que la entidad doctor no se encuentre en la base de datos
-     * @param doctor corresponde a la entidad que será almacenada en la base de datos
-     * @return username que corresponde al nombre de usuario del doctor que se almaceno
-     * o un valor nulo si no se pudo guardar la entidad.
+     * Creates a new instance of DoctorManager
      */
-    public String saveNewDoctor(Doctor doctor){
-        DoctorFacadeREST dc = new DoctorFacadeREST();
-        if(dc.find(doctor.username) =! null){
-            return null;
-        }
-        dc.create(doctor);
-        return doctor.username;
+    public DoctorManager() {
     }
+
     /**
-     * Este metodo permite asignar un horario a un doctor, primero verifica que
-     * el doctor no tenga ese horario asignado.
-     * @param schedule corresponde al horario que se asignara a una entidad de tipo Doctor
-     * @return un valor entero que corresponde a -1 si no se pudo completar la
-     * operacion o schedule.idSchedule si la operacion se realizo correctamente.
+     * Retrieves representation of an instance of multixsoft.hospitapp.management.DoctorManager
+     * @return an instance of java.lang.String
      */
-    public int setSchedule(Scheudle schedule){
-        ScheduleFacadeREST sf = new ScheduleFacadeREST();
-        if(sf.find(schedule.idSchedule) =! null){
-            return -1;
-        }
-        sf.create(schedule);
-        return schedule.idSchedule;
+    @GET
+    @Produces("application/json")
+    public String getJson() {
+        //TODO return proper representation object
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * PUT method for updating or creating an instance of DoctorManager
+     * @param content representation for the resource
+     * @return an HTTP response with content of the updated or created resource.
+     */
+    @PUT
+    @Consumes("application/json")
+    public void putJson(String content) {
     }
 }

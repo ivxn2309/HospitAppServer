@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(multixsoft.hospitapp.management.DoctorManager.class);
         resources.add(multixsoft.hospitapp.webservice.AdminFacadeREST.class);
         resources.add(multixsoft.hospitapp.webservice.AppointmentFacadeREST.class);
         resources.add(multixsoft.hospitapp.webservice.DoctorFacadeREST.class);
