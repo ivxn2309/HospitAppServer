@@ -24,7 +24,7 @@ import multixsoft.hospitapp.entities.Patient;
  * @author Ivan Tovar
  */
 @Stateless
-@Path("multixsoft.hospitapp.entities.patient")
+@Path("patient")
 public class PatientFacadeREST extends AbstractFacade<Patient> {
     @PersistenceContext(unitName = "HospitAppServerPU")
     private EntityManager em;

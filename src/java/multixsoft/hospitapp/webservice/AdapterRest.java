@@ -71,7 +71,7 @@ public class AdapterRest {
         return resultado;
     }
     
-    public void post(String path, String jsonObject){
+    public boolean post(String path, String jsonObject){
         byte [] pack = jsonObject.getBytes();
         try {
             URL url = new URL(base + path);
@@ -89,16 +89,19 @@ public class AdapterRest {
             //System.out.println("Codigo recibido" + codigo);
             if (codigo / 100 != 2) {
                 //System.out.println("Error en Codigo recibido" + codigo);
-                return;
+                return true;
             }
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return false;
     }
     
-    public void put(String path, String jsonObject){
+    public boolean put(String path, String jsonObject){
         byte [] pack = jsonObject.getBytes();
         try {
             URL url = new URL(base + path);
@@ -116,12 +119,15 @@ public class AdapterRest {
             //System.out.println("Codigo recibido" + codigo);
             if (codigo / 100 != 2) {
                 //System.out.println("Error en Codigo recibido" + codigo);
-                return;
+                return true;
             }
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return false;
     }
 }

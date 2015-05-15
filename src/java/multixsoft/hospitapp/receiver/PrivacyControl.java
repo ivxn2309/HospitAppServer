@@ -1,34 +1,47 @@
 package multixsoft.hospitapp.receiver;
 
-import multixsoft.hospitapp.entities.Admin;
-import multixsoft.hospitapp.entities.Doctor;
-import multixsoft.hospitapp.entities.Patient;
-import multixsoft.hospitapp.webservice.AdminFacadeREST;
-import multixsoft.hospitapp.webservice.DoctorFacadeREST;
-import multixsoft.hospitapp.webservice.PatientFacadeREST;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PUT;
+import multixsoft.hospitapp.webservice.AdapterRest;
+import org.json.simple.JSONObject;
 
 /**
+ * REST Web Service
  * @author Ivan Tovar
  * @version 1.0
  * @date 12/May/2015
  */
+@Path("privacycontrol")
 public class PrivacyControl {
-    public PrivacyControl(){
-        
+
+    @Context
+    private UriInfo context;
+    private AdapterRest adapter;
+
+    public PrivacyControl() {
+        adapter = new AdapterRest();
     }
-    
+
     public int accessAsPatient(String nss, String password) {
         if(!isValid(nss)){
             return -1;
         }
         if(!isValid(decrypt(password, "key", "256"))) {
             return -1;
-        }
-        Patient patient = new PatientFacadeREST().find(nss);
-        if(patient == null) {
+        }        
+        
+        JSONObject jObj = (JSONObject)adapter.get("patient/"+nss);
+        
+        if(jObj.isEmpty()) {
             return -1;
         }
-        if(!patient.getPassword().equals(password)){
+        if(!jObj.get("password").equals(password)){
             return -1;
         }
         return 1;
@@ -41,17 +54,17 @@ public class PrivacyControl {
         if(!isValid(decrypt(password, "key", "256"))) {
             return -1;
         }
-        Doctor doctor = new DoctorFacadeREST().find(username);
-        Admin admin = new AdminFacadeREST().find(username);
-        if(doctor == null) {
-            if(admin == null) {
+        JSONObject doctor = (JSONObject)adapter.get("doctor/"+username);
+        JSONObject admin = (JSONObject)adapter.get("admin/"+username);
+        if(doctor.isEmpty()) {
+            if(admin.isEmpty()) {
                 return -1;
             }
-            else if(admin.getPassword().equals(password)){
+            else if(admin.get("password").equals(password)){
                 return 2;
             }
         }
-        else if(doctor.getPassword().equals(password)){
+        else if(doctor.get("password").equals(password)){
             return 1;
         }
         return -1;
@@ -66,6 +79,6 @@ public class PrivacyControl {
     }
     
     private boolean isValid(String string) {
-        return false;
+        return true;
     }
 }

@@ -24,7 +24,7 @@ import multixsoft.hospitapp.entities.Admin;
  * @author Ivan Tovar
  */
 @Stateless
-@Path("multixsoft.hospitapp.entities.admin")
+@Path("admin")
 public class AdminFacadeREST extends AbstractFacade<Admin> {
     @PersistenceContext(unitName = "HospitAppServerPU")
     private EntityManager em;

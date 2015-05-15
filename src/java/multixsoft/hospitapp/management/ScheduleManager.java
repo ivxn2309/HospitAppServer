@@ -32,7 +32,9 @@ public class ScheduleManager {
         AdapterRest adapter = new AdapterRest();
         String path = "appointment/appointmentsfor?username=" + usrn + "&date=" + date;
         JSONArray array = (JSONArray)adapter.get(path);
-        
+        if (array.isEmpty()) {
+            return null;
+        }
         return array.toJSONString();
     }
 }
