@@ -54,16 +54,38 @@ public class DoctorManager {
     public void putJson(String content) {
     }
     * */
-    @PUT
+    @POST
     @PathParam("/savenewdoctor")
-    @Produces ("aplication/json")
+    @Consumes ("aplication/json")
     public String putSaveNewDoctor(
         @QueryParam("username") String usrname){
         AdapterRest adapter = new AdapterRest();
         String path = "doctor/id=" + usrname;
-        JSONArray array = new (JSONArray) adapter.get(path);
-        
-        
-        return array.toJSONString();
+        JSONArray array = (JSONArray) adapter.get(path);
+        if(array.isEmpty()){
+            path = "doctor/create";
+            adapter.post(path, new JSONobject());
+            return usrname;
+        }else{
+            return null;
+        }
     }
+    
+    @PUT
+    @Path("/setschedule")
+    @consumes("application/json")
+    public String putSetSchedule(
+        @QueryParam("idschedule") String idsched){
+        AdapterRest adapter = new AdapterRest();
+        String path = "multixsoft.hospitapp.entities.schedule/id=" + idsched;
+        JSONArray array = (JSONArray) adapter.get(path);
+        if(array.isEmpty()){
+            path = "multixsoft.hospitapp.entities.schedule/create";
+            adapter.put(path, jsonObject);
+            return idsched;
+        }else{
+            return null;
+        }
+    }
+    
 }
