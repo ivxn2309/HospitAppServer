@@ -58,7 +58,7 @@ public class DoctorManager {
     @POST
     @Path("/savenewdoctor")
     @Consumes ("aplication/json")
-    public String putSaveNewDoctor(
+    public String postSaveNewDoctor(
         @QueryParam("doctor") String doc){
         AdapterRest adapter = new AdapterRest();
         JSONObject doctorObject = new JSONObject(doc);
@@ -77,14 +77,15 @@ public class DoctorManager {
     @Path("/setschedule")
     @consumes("application/json")
     public String putSetSchedule(
-        @QueryParam("idschedule") String idsched){
+        @QueryParam("schedule") String sched){
         AdapterRest adapter = new AdapterRest();
-        String path = "multixsoft.hospitapp.entities.schedule/id=" + idsched;
-        JSONArray array = (JSONArray) adapter.get(path);
-        if(array.isEmpty()){
+        JSONObject scheduleObject = new JSONObject(sched);
+        String path = "multixsoft.hospitapp.entities.schedule/id=" + scheduleObject.get("idSchedule");
+        JSONObject scheduleRequest = (JSONObject) adapter.get(path);
+        if(scheduleRequest.isEmpty()){
             path = "multixsoft.hospitapp.entities.schedule/create";
-            adapter.put(path, jsonObject);
-            return idsched;
+            adapter.put(path, scheduleRequest.toJSONString());
+            return scheduleObject.get("idSchedule");
         }else{
             return null;
         }
