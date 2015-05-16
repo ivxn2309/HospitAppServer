@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import multixsoft.hospitapp.webservice.AdapterRest;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * REST Web Service
@@ -55,17 +56,18 @@ public class DoctorManager {
     }
     * */
     @POST
-    @PathParam("/savenewdoctor")
+    @Path("/savenewdoctor")
     @Consumes ("aplication/json")
     public String putSaveNewDoctor(
-        @QueryParam("username") String usrname){
+        @QueryParam("doctor") String doc){
         AdapterRest adapter = new AdapterRest();
-        String path = "doctor/id=" + usrname;
-        JSONArray array = (JSONArray) adapter.get(path);
-        if(array.isEmpty()){
+        JSONObject doctorObject = new JSONObject(doc);
+        String path = "doctor/id=" + doctorObject.get("username");
+        JSONObject doctorRequest = (JSONObject) adapter.get(path);
+        if(doctorRequest.isEmpty()){
             path = "doctor/create";
-            adapter.post(path, new JSONobject());
-            return usrname;
+            adapter.post(path,doctorObject.toJSONString());
+            return doctorObject.get("username");
         }else{
             return null;
         }
@@ -87,5 +89,4 @@ public class DoctorManager {
             return null;
         }
     }
-    
 }
