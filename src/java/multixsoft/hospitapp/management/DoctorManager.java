@@ -61,16 +61,20 @@ public class DoctorManager {
     public String postSaveNewDoctor(
         @QueryParam("doctor") String doc){
         AdapterRest adapter = new AdapterRest();
-        JSONObject doctorObject = new JSONObject(doc);
-        String path = "doctor/id=" + doctorObject.get("username");
-        JSONObject doctorRequest = (JSONObject) adapter.get(path);
-        if(doctorRequest.isEmpty()){
-            path = "doctor/create";
-            adapter.post(path,doctorObject.toJSONString());
-            return doctorObject.get("username");
-        }else{
-            return null;
-        }
+        try{
+        	JSONObject doctorObject = (JSONObject)new JSONParser().parse(doc);
+        	String path = "doctor/id=" + doctorObject.get("username");
+        	JSONObject doctorRequest = (JSONObject) adapter.get(path);
+        	if(doctorRequest.isEmpty()){
+            	path = "doctor/create";
+            	adapter.post(path,doctorObject.toJSONString());
+            	return doctorObject.get("username");
+        	}else{
+            	return null;
+        	}
+    	}catch(ParseException io){
+    		return null;
+    	}
     }
     
     @PUT
@@ -79,15 +83,19 @@ public class DoctorManager {
     public String putSetSchedule(
         @QueryParam("schedule") String sched){
         AdapterRest adapter = new AdapterRest();
-        JSONObject scheduleObject = new JSONObject(sched);
-        String path = "multixsoft.hospitapp.entities.schedule/id=" + scheduleObject.get("idSchedule");
-        JSONObject scheduleRequest = (JSONObject) adapter.get(path);
-        if(scheduleRequest.isEmpty()){
-            path = "multixsoft.hospitapp.entities.schedule/create";
-            adapter.put(path, scheduleRequest.toJSONString());
-            return scheduleObject.get("idSchedule");
-        }else{
-            return null;
+        try{
+        	JSONObject scheduleObject = new JSONObject(sched);
+        	String path = "multixsoft.hospitapp.entities.schedule/id=" + scheduleObject.get("idSchedule");
+        	JSONObject scheduleRequest = (JSONObject) adapter.get(path);
+        	if(scheduleRequest.isEmpty()){
+            	path = "multixsoft.hospitapp.entities.schedule/create";
+            	adapter.put(path, scheduleRequest.toJSONString());
+            	return scheduleObject.get("idSchedule");
+        	}else{
+            	return null;
+        }
+        }catch(ParseException e){
+        	return null;
         }
     }
 }
