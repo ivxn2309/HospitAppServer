@@ -36,25 +36,10 @@ public class DoctorManager {
     }
     
     /**
-     * Retrieves representation of an instance of multixsoft.hospitapp.management.DoctorManager
-     * @return an instance of java.lang.String
-     *    @GET
-    @Produces("application/json")
-    public String getJson() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * PUT method for updating or creating an instance of DoctorManager
-     * @param content representation for the resource
-     * @return an HTTP response with content of the updated or created resource.
-     
-    @PUT
-    @Consumes("application/json")
-    public void putJson(String content) {
-    }
-    * */
+     * POST para crear una instancia de Doctor Manager
+     * @param doc corresponde a la representacion del Doctor Manager que se creará
+     * @return un String que contiene el nombre de usuario del doctor que se ha creado
+    **/
     @POST
     @Path("/savenewdoctor")
     @Consumes ("aplication/json")
@@ -77,7 +62,12 @@ public class DoctorManager {
     	}
     }
     
-    @PUT
+    /**
+    * POST metodo para crear una instancia de Schedule Manager
+    * @param sched es la representacion del Schedule Manager que se creará
+    * @return Un String que contiene el id del Schedule Manager que se creó
+    **/
+    @POST
     @Path("/setschedule")
     @consumes("application/json")
     public String putSetSchedule(
@@ -93,7 +83,7 @@ public class DoctorManager {
             	return scheduleObject.get("idSchedule");
         	}else{
             	return null;
-        }
+        	}
         }catch(ParseException e){
         	return null;
         }
