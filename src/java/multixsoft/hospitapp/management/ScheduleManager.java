@@ -191,8 +191,8 @@ public class ScheduleManager {
                 }
             }
         }
-        
-        return adapter.put("schedule", doctorSchedule.toJSONString());
+        adapter.put("schedule", doctorSchedule.toJSONString());
+        return doctorSchedule.toJSONString();
     }
     
     private String scheduleIntervalByDay(@QueryParam("idSchedule") String idSchedule, int day){
