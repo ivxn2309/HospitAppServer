@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,6 +18,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import multixsoft.hospitapp.entities.Appointment;
 import multixsoft.hospitapp.entities.Patient;
 
 /**
@@ -24,7 +27,7 @@ import multixsoft.hospitapp.entities.Patient;
  * @author Ivan Tovar
  */
 @Stateless
-@Path("multixsoft.hospitapp.entities.patient")
+@Path("patient")
 public class PatientFacadeREST extends AbstractFacade<Patient> {
     @PersistenceContext(unitName = "HospitAppServerPU")
     private EntityManager em;
@@ -87,11 +90,13 @@ public class PatientFacadeREST extends AbstractFacade<Patient> {
     }
 
 
-    /* Retrieve all the appointments unfinished associated with the patient*/
-    public List<Appointment> getUnfinishedAppointments(Patient patient){
-        String sql = "SELECT * FROM Appointment WHERE patientNss = :pnss AND"
-                + " AND isFinished is false";
-        Query query = getEntityManager().createQuery(sql).setParameter("pnss", patient.getNss());
+    @GET
+    @Path("/unfinishedappointments")
+    @Produces("application/json")
+    public List<Appointment> getUnfinishedAppointments(@QueryParam("nss") String nss){
+        String sql = "SELECT * FROM Appointment WHERE patientNss = :nss AND"
+                + " isFinished is false";
+        Query query = getEntityManager().createQuery(sql).setParameter("nss", new Patient(nss));
 
         List<Appointment> appointments = query.getResultList();
         return appointments;
