@@ -31,20 +31,23 @@ import multixsoft.hospitapp.utilities.*;
 @Path("schedulemanager")
 public class ScheduleManager {
 
+    private AdapterRest adapter;
+    
     @Context
     private UriInfo context;
-
+    
+    
     /**
      * Creates a new instance of ScheduleManager
      */
     public ScheduleManager() {
+        adapter = new AdapterRest();
     }
 
     @PUT
     @Path("/cancelappointment")
     @Produces("application/json")
     public boolean cancelAppointment(@QueryParam("idAppointment") String id){
-        AdapterRest adapter = new AdapterRest();
         String path="appointment/"+id;
         JSONObject appointment = (JSONObject) adapter.get(path);
         
@@ -60,7 +63,6 @@ public class ScheduleManager {
     @Path("/scheduleappointment")
     @Produces("application/json")
     public long scheduleAppointment(@QueryParam("Appointment") String appointment){
-        AdapterRest adapter = new AdapterRest();
         JSONObject appointmentToSchedule = (JSONObject) JSONValue.parse(appointment);
         
         String doctorPath = "doctor/"+appointmentToSchedule.get("username");
@@ -81,34 +83,31 @@ public class ScheduleManager {
             
         }else{
             
-            adapter.put("appointment/", appointmentToSchedule.toJSONString());
+            adapter.put("appointment", appointmentToSchedule.toJSONString());
             return (Long)appointmentToSchedule.get("idAppointment");
         }
         
     }
     
-    @GET
-    
+   
      /* compara si dos appointments tienen el mismo paciente y fecha */
     private boolean comparePatientAndDate(@QueryParam("idAppointment") String id){
-         AdapterRest adapter = new AdapterRest();
-         JSONObject appointment =  (JSONObject) adapter.get("appointment/"+id);
-         JSONArray appointments = (JSONArray)adapter.get("appointment");
+       JSONObject appointment =  (JSONObject) adapter.get("appointment/"+id);
+       JSONArray appointments = (JSONArray)adapter.get("appointment");
          
-         for (Object app: appointments ){
-             if(((JSONObject)app).get("nss") == appointment.get("nss") 
+        for (Object app: appointments ){
+            if(((JSONObject)app).get("nss") == appointment.get("nss") 
                      && appointment.get("date") == appointment.get("date")){
                  return true;
-             }
-         }
-         return false;
+            }
+        }
+        return false;
     }
              
     @PUT
     @Path("/finishappointment")
     @Produces("application/json")
     public boolean setAppointmentFinish( @QueryParam("idAppointment") String id){
-        AdapterRest adapter = new AdapterRest();
         String path="appointment/"+id;
         JSONObject appointment = (JSONObject) adapter.get(path);
         
@@ -125,9 +124,8 @@ public class ScheduleManager {
     @Path("/nextappointment")
     @Produces("application/json")
     public String getNextAppointment(@QueryParam("nss") String nss){
-        AdapterRest adapter = new AdapterRest();
-        String path="patient/"+nss;
-        JSONObject patient = (JSONObject) adapter.get(path);
+        String patientPath="patient/"+nss;
+        JSONObject patient = (JSONObject) adapter.get(patientPath);
         
         String pathApps="patient/unfinishedappointments?nss="+nss;
         JSONArray patientAppointments = (JSONArray) adapter.get(pathApps);
@@ -137,11 +135,13 @@ public class ScheduleManager {
         }
         
         JSONObject nextAppointment = (JSONObject) patientAppointments.get(0);
-        JSONObject appointment;
-   
+        JSONObject actualApp;
         for(Object app: patientAppointments){
-           if(((JSONObject)app).get("date").isBefore(((JSONObject)nextAppointment).get("date"))){
-               nextAppointment = (JSONObject)app;
+            actualApp = (JSONObject) app;
+            Date appDate = (Date)actualApp.get("date");
+            Date nextAppDate = (Date) nextAppointment.get("date");
+           if(appDate.isBefore(nextAppDate)){
+               nextAppointment = actualApp;
            }
            
         }
@@ -153,7 +153,6 @@ public class ScheduleManager {
     @Path("/availableschedule")
     @Produces("application/json")
     public String getAvailableSchedule(@QueryParam("username") String usr, boolean original){
-        AdapterRest adapter = new AdapterRest();
         JSONObject doctor = (JSONObject) adapter.get("doctor/"+usr);
         
         if(doctor.isEmpty()){
@@ -196,7 +195,6 @@ public class ScheduleManager {
     }
     
     private String scheduleIntervalByDay(@QueryParam("idSchedule") String idSchedule, int day){
-        AdapterRest adapter = new AdapterRest();
         JSONObject schedule = (JSONObject) adapter.get("schedule/"+idSchedule);
      
         if(day == 2){
