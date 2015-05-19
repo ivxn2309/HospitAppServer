@@ -32,6 +32,12 @@ import multixsoft.hospitapp.utilities.*;
 public class ScheduleManager {
 
     private AdapterRest adapter;
+    private final String APPOINTMENT_PATH="appointment/";
+    private final String PATIENT_PATH="patient/";
+    private final String DOCTOR_PATH="doctor/";
+    private final String DOCTOR_UNFINISHED_APPS="doctor/unfinishedappointments?username=";
+    private final String PATIENT_UNIFINISHED_APPS="patient/unfinishedappointments?nss=";
+    private final String DOCTOR_SCHEDULE_PATH="doctor/doctorschedule?username=";
     
     @Context
     private UriInfo context;
@@ -46,105 +52,49 @@ public class ScheduleManager {
 
     @PUT
     @Path("/cancelappointment")
-    @Produces("application/json")
     public boolean cancelAppointment(@QueryParam("idAppointment") String id){
-        String path="appointment/"+id;
-        JSONObject appointment = (JSONObject) adapter.get(path);
-        
-        if(appointment.isEmpty()){
+        JSONObject appointment = getAppointmentFromId(id);
+         if(appointment.isEmpty()){
             return false;
         }
-        
         appointment.put("iscanceled", true);
         return adapter.put("appointment",appointment.toJSONString());
     }
     
-    @POST
-    @Path("/scheduleappointment")
-    @Produces("application/json")
-    public long scheduleAppointment(@QueryParam("Appointment") String appointment){
-        JSONObject appointmentToSchedule = (JSONObject) JSONValue.parse(appointment);
-        
-        String doctorPath = "doctor/"+appointmentToSchedule.get("username");
-        JSONObject doctor = (JSONObject) adapter.get(doctorPath);
-        
-        String patientPath = "patient/"+appointmentToSchedule.get("nss");
-        JSONObject patient = (JSONObject) adapter.get(patientPath);
-        
-        Date actualDate = new Date();
-       
-        Date appointmentDate = (Date)appointmentToSchedule.get("date");
-        boolean appointmentAlreadyExists = 
-                comparePatientAndDate(appointmentToSchedule.get("idAppointment").toString());
-        
-        if(doctor.isEmpty() || patient.isEmpty() || actualDate.isBefore(appointmentDate)
-                || appointmentAlreadyExists ){
-            return -1;
-            
-        }else{
-            
-            adapter.put("appointment", appointmentToSchedule.toJSONString());
-            return (Long)appointmentToSchedule.get("idAppointment");
-        }
-        
-    }
-    
-   
-     /* compara si dos appointments tienen el mismo paciente y fecha */
-    private boolean comparePatientAndDate(@QueryParam("idAppointment") String id){
-       JSONObject appointment =  (JSONObject) adapter.get("appointment/"+id);
-       JSONArray appointments = (JSONArray)adapter.get("appointment");
-         
-        for (Object app: appointments ){
-            if(((JSONObject)app).get("nss") == appointment.get("nss") 
-                     && appointment.get("date") == appointment.get("date")){
-                 return true;
-            }
-        }
-        return false;
-    }
-             
     @PUT
     @Path("/finishappointment")
-    @Produces("application/json")
-    public boolean setAppointmentFinish( @QueryParam("idAppointment") String id){
-        String path="appointment/"+id;
-        JSONObject appointment = (JSONObject) adapter.get(path);
-        
+    public boolean setAppointmentFinish(@QueryParam("idAppointment") String id){
+        JSONObject appointment = getAppointmentFromId(id);
         if(appointment.isEmpty()){
             return false;
         }
-        
         appointment.put("isFinished", true);
         return adapter.put("appointment", appointment.toJSONString());
-       
     }
     
+    @POST
+    @Path("/scheduleappointment")
+    public long scheduleAppointment(@QueryParam("Appointment") String appointment){
+        JSONObject appointmentToSchedule = (JSONObject) JSONValue.parse(appointment);
+        if(isAppointmentValid(appointmentToSchedule)){
+            return -1;
+        }else{
+            adapter.put("appointment", appointmentToSchedule.toJSONString());
+            return (Long) appointmentToSchedule.get("idAppointment");
+        }
+    }
+             
     @GET
     @Path("/nextappointment")
     @Produces("application/json")
     public String getNextAppointment(@QueryParam("nss") String nss){
-        String patientPath="patient/"+nss;
-        JSONObject patient = (JSONObject) adapter.get(patientPath);
-        
-        String pathApps="patient/unfinishedappointments?nss="+nss;
-        JSONArray patientAppointments = (JSONArray) adapter.get(pathApps);
+        JSONObject patient = getPatientFromNss(nss);
+        JSONArray patientAppointments = getPatientAppointments(nss);
         
         if(patientAppointments.isEmpty()){
             return null;
         }
-        
-        JSONObject nextAppointment = (JSONObject) patientAppointments.get(0);
-        JSONObject actualApp;
-        for(Object app: patientAppointments){
-            actualApp = (JSONObject) app;
-            Date appDate = (Date)actualApp.get("date");
-            Date nextAppDate = (Date) nextAppointment.get("date");
-           if(appDate.isBefore(nextAppDate)){
-               nextAppointment = actualApp;
-           }
-           
-        }
+        JSONObject nextAppointment = compareAppointmentsDate(patientAppointments);
         return nextAppointment.toJSONString();
     }
     
@@ -153,49 +103,71 @@ public class ScheduleManager {
     @Path("/availableschedule")
     @Produces("application/json")
     public String getAvailableSchedule(@QueryParam("username") String usr, boolean original){
-        JSONObject doctor = (JSONObject) adapter.get("doctor/"+usr);
-        
+        JSONObject doctor = getDoctorFromUsername(usr);
         if(doctor.isEmpty()){
             return null;
         }
-        JSONObject doctorSchedule = (JSONObject) adapter.get("doctor/doctorschedule?username="+usr);
         
+        JSONObject doctorSchedule = getDoctorSchedule(usr);
         if(original){
             return doctorSchedule.toJSONString();
         }
 
-        JSONArray doctorAppointments = (JSONArray) adapter.get("doctor/unfinishedappointments?username="+usr);
+        JSONArray doctorAppointments = getDoctorAppointments(usr);
   
         IntervalFilter intervalFilter = new IntervalFilter();
         
         for(Object appointment : doctorAppointments){
-            Date appDate = (Date) ((JSONObject)appointment).get("date");
+            Date appDate = getAppointmentDate((JSONObject)appointment);
+            
             if(appDate.belongsThisWeek()){
                 int day = appDate.getDayOfWeek();
                 int appointmentTime = (Integer) ((JSONObject)appointment).get("time");
                 String scheduleTime = scheduleIntervalByDay(doctorSchedule.get("idSchedule").toString(), day);
-                //obtenemos una cadena con los intervalos para un día dado
                 String newInterval = intervalFilter.removeInterval(appointmentTime, scheduleTime);
-                
-                if(day == 2){
-                    doctorSchedule.put("monday", newInterval);
-                }else if(day==3){
-                    doctorSchedule.put("tuesday", newInterval);
-                }else if(day==4){
-                    doctorSchedule.put("wednesday", newInterval);
-                }else if(day==5){
-                    doctorSchedule.put("thursday", newInterval);
-                }else if(day==6){
-                    doctorSchedule.put("friday", newInterval);
-                }
+                putScheduleByDay(day, newInterval, doctorSchedule);
             }
         }
         adapter.put("schedule", doctorSchedule.toJSONString());
         return doctorSchedule.toJSONString();
     }
     
+    
+    private JSONObject compareAppointmentsDate(JSONArray appointments){
+        JSONObject nextAppointment = (JSONObject) appointments.get(0);
+        JSONObject actualApp;
+        
+        for(Object app: appointments){
+            actualApp = (JSONObject) app;
+            Date appDate = getAppointmentDate(actualApp);
+            Date nextAppDate = getAppointmentDate(nextAppointment);
+            
+           if(appDate.isBefore(nextAppDate)){
+               nextAppointment = actualApp;
+           }
+        }
+        return nextAppointment;
+    }
+    
+    private boolean putScheduleByDay(int day, String interval, JSONObject doctorSchedule){
+        if (day == 2) {
+            doctorSchedule.put("monday", interval);
+        } else if (day == 3) {
+            doctorSchedule.put("tuesday", interval);
+        } else if (day == 4) {
+            doctorSchedule.put("wednesday", interval);
+        } else if (day == 5) {
+            doctorSchedule.put("thursday", interval);
+        } else if (day == 6) {
+            doctorSchedule.put("friday", interval);
+        }else{ 
+            return false;
+        }
+        return true;
+    }
+    
     private String scheduleIntervalByDay(@QueryParam("idSchedule") String idSchedule, int day){
-        JSONObject schedule = (JSONObject) adapter.get("schedule/"+idSchedule);
+        JSONObject schedule = getSchedule(idSchedule);
      
         if(day == 2){
             return schedule.get("monday").toString();
@@ -210,5 +182,78 @@ public class ScheduleManager {
         }
         return null;
     }
-
+    
+    private boolean isAppointmentValid(JSONObject appointment){
+        Date actualDate = new Date();
+        Date appointmentDate = getAppointmentDate(appointment);
+        String idAppointment = appointment.get("idAppointment").toString();
+        boolean appointmentAlreadyExists = comparePatientAndDate(idAppointment);
+        if((!patientDoctorExists(appointment)) 
+                || actualDate.isBefore(appointmentDate)
+                || appointmentAlreadyExists){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    private boolean patientDoctorExists(JSONObject appointment){
+        String doctorUsername = appointment.get("username").toString();
+        JSONObject doctor = getDoctorFromUsername(doctorUsername);
+        String patientNss = appointment.get("nss").toString();
+        JSONObject patient = getPatientFromNss(patientNss);
+        
+        if(doctor.isEmpty() || patient.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+    
+    private JSONObject getAppointmentFromId(String id){
+        return (JSONObject) adapter.get(APPOINTMENT_PATH+id);
+    }
+    
+    private Date getAppointmentDate(JSONObject appointment){
+        return (Date) appointment.get("date");
+    }
+    
+    private JSONObject getPatientFromNss(String nss){
+        return (JSONObject) adapter.get(PATIENT_PATH+nss);
+    }
+    
+    private JSONObject getDoctorFromUsername(String usr){
+        return (JSONObject) adapter.get(DOCTOR_PATH+usr);
+    }
+    
+    private JSONArray getPatientAppointments(String nss){
+        return (JSONArray) adapter.get(PATIENT_UNIFINISHED_APPS+nss);
+    }
+    
+    private JSONObject getDoctorSchedule(String usr){
+        return (JSONObject) adapter.get(DOCTOR_SCHEDULE_PATH+usr);
+    }
+    
+    private JSONObject getSchedule(String idSchedule){
+        return (JSONObject) adapter.get("schedule/"+idSchedule);
+    }
+    
+    private JSONArray getDoctorAppointments(String usr){
+        return (JSONArray) adapter.get(DOCTOR_UNFINISHED_APPS+usr);
+    }
+    
+    
+     /* compara si dos appointments tienen el mismo paciente y fecha */
+    private boolean comparePatientAndDate(@QueryParam("idAppointment") String id){
+       JSONObject appointment =  getAppointmentFromId(id);
+       JSONArray appointments = (JSONArray)adapter.get("appointment");
+         
+        for (Object app: appointments ){
+            if(((JSONObject)app).get("nss") == appointment.get("nss") 
+                     && appointment.get("date") == appointment.get("date")){
+                 return true;
+            }
+        }
+        return false;
+    }
+ 
 }
