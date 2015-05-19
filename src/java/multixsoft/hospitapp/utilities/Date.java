@@ -13,6 +13,14 @@ public class Date {
     private int year;
     private Calendar calendar;
 
+    public Date() {
+        Calendar calendar = Calendar.getInstance();
+        dia = calendar.get(Calendar.DATE);
+        mes = calendar.get(Calendar.MONTH) + 1;
+        year = calendar.get(Calendar.YEAR);
+        this.calendar = calendar;
+    }
+    
     public Date(Calendar calendar) {
         dia = calendar.get(Calendar.DATE);
         mes = calendar.get(Calendar.MONTH) + 1;
