@@ -24,7 +24,7 @@ import multixsoft.hospitapp.entities.Schedule;
  * @author Ivan Tovar
  */
 @Stateless
-@Path("multixsoft.hospitapp.entities.schedule")
+@Path("schedule")
 public class ScheduleFacadeREST extends AbstractFacade<Schedule> {
     @PersistenceContext(unitName = "HospitAppServerPU")
     private EntityManager em;

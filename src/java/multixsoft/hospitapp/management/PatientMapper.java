@@ -1,6 +1,5 @@
 package multixsoft.hospitapp.management;
 
-import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -8,7 +7,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import multixsoft.hospitapp.webservice.AdapterRest;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
@@ -32,7 +30,6 @@ public class PatientMapper {
     public boolean mapPatient(
             @QueryParam("nss") String nss, @QueryParam("username") String usrn) {
         AdapterRest adapter = new AdapterRest();
-        
         JSONObject jObj = (JSONObject)adapter.get("patient/"+nss);
         if (jObj.isEmpty()) {
             return false;
