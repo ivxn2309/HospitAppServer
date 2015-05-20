@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,7 +18,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import multixsoft.hospitapp.entities.Appointment;
 import multixsoft.hospitapp.entities.Doctor;
+import multixsoft.hospitapp.entities.Schedule;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -85,5 +90,31 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
     protected EntityManager getEntityManager() {
         return em;
     }
+
+    @GET
+    @Path("/doctorschedule")
+    @Produces("application/json")
+    @Consumes("text/plain")
+    public Schedule getDoctorSchedule(@QueryParam("username") String usrn){
+        String sql = "SELECT s FROM Schedule s WHERE s.doctorUsername.username = :usrn";
+        Query query = getEntityManager().createQuery(sql).setParameter("usrn", usrn);
+        Schedule doctorSchedule = (Schedule) query.getSingleResult();
+        return doctorSchedule;
+    }
+
+    @GET
+    @Path("/unfinishedappointments")
+    @Produces("application/json")
+    @Consumes("text/plain")
+    public List<Appointment> getDoctorUnfinishedAppointments(@QueryParam("username") String usrn){
+        String sql = "SELECT a FROM Appointment a WHERE a.doctorUsername.username = :usrn AND"
+                + " isFinished = 0";
+        
+        Query query = getEntityManager().createQuery(sql).setParameter("usr", usrn);
+        List<Appointment> appointments = query.getResultList();
+        return appointments;
+    }
+
+    
     
 }

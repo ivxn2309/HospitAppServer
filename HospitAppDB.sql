@@ -1,22 +1,4 @@
--- =====================================================
--- @DB HospitApp DB
--- @DATE Created 10/May/2015
--- @AUTHOR Iván Tovar
--- =====================================================
--- ------------------------------------------------
--- Database Manager
--- ------------------------------------------------
-SELECT PASSWORD('h0sp1t4pp2015');
-CREATE USER 'hospitapp_admin' IDENTIFIED BY PASSWORD '*242735B451C0C49F68FA35965DE2CE279E270C44';
 
--- ------------------------------------------------
--- Database
--- ------------------------------------------------
-CREATE DATABASE `hospitapp` CHARACTER SET utf8 COLLATE utf8_general_ci;
-GRANT ALL ON `hospitapp`.* TO `hospitapp_admin`@localhost IDENTIFIED BY 'h0sp1t4pp2015';
-FLUSH PRIVILEGES;
-
-use `hospitapp`;
 
 -- ------------------------------------------------
 -- DROPS

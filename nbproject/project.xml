@@ -13,6 +13,8 @@
                     <file>${file.reference.json-simple-1.1.1.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
+<<<<<<< HEAD
+=======
                 <library dirs="200">
                     <file>${file.reference.junit-4.11.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
@@ -21,6 +23,7 @@
                     <file>${file.reference.hamcrest-core-1.3.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
+>>>>>>> server_ut
             </web-module-libraries>
             <web-module-additional-libraries/>
             <source-roots>

@@ -1,11 +1,24 @@
+<<<<<<< HEAD
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+=======
+>>>>>>> server_ut
 package multixsoft.hospitapp.utilities;
 
 import java.util.Calendar;
 
 /**
+<<<<<<< HEAD
+ *
+ * @author maritza
+=======
  * @author Ivan Tovar
  * @version 1.0
  * @date 12/May/2015
+>>>>>>> server_ut
  */
 public class Date {
     private int dia;
@@ -13,6 +26,11 @@ public class Date {
     private int year;
     private Calendar calendar;
 
+<<<<<<< HEAD
+    public Date(){
+        
+    }
+=======
     public Date() {
         Calendar calendar = Calendar.getInstance();
         dia = calendar.get(Calendar.DATE);
@@ -21,6 +39,7 @@ public class Date {
         this.calendar = calendar;
     }
     
+>>>>>>> server_ut
     public Date(Calendar calendar) {
         dia = calendar.get(Calendar.DATE);
         mes = calendar.get(Calendar.MONTH) + 1;
@@ -34,7 +53,11 @@ public class Date {
         this.year = year;
         calendar = Calendar.getInstance();
         calendar.set(Calendar.DATE, dia);
+<<<<<<< HEAD
+        calendar.set(Calendar.MONTH, mes);
+=======
         calendar.set(Calendar.MONTH, mes-1);
+>>>>>>> server_ut
         calendar.set(Calendar.YEAR, year);
     }
 
@@ -183,5 +206,8 @@ public class Date {
             
         return str.toString();
     }
+<<<<<<< HEAD
+=======
 
+>>>>>>> server_ut
 }
