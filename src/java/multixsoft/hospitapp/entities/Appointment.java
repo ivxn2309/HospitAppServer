@@ -48,6 +48,8 @@ public class Appointment implements Serializable {
     private Boolean isFinished;
     @Column(name = "iscanceled")
     private Boolean iscanceled;
+    @Column(name = "time")
+    private String time;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAppointment")
     private Collection<Report> reportCollection;
     @JoinColumn(name = "doctor_username", referencedColumnName = "username")
@@ -90,6 +92,14 @@ public class Appointment implements Serializable {
 
     public Boolean getIscanceled() {
         return iscanceled;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public void setIscanceled(Boolean iscanceled) {

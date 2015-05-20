@@ -34,7 +34,7 @@ public class Date {
         this.year = year;
         calendar = Calendar.getInstance();
         calendar.set(Calendar.DATE, dia);
-        calendar.set(Calendar.MONTH, mes);
+        calendar.set(Calendar.MONTH, mes-1);
         calendar.set(Calendar.YEAR, year);
     }
 

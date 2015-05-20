@@ -26,7 +26,7 @@ public class PatientMapper {
 
     @PUT
     @Path("/mappatient")
-    @Produces("application/json")
+    @Produces("text/plain")
     public boolean mapPatient(
             @QueryParam("nss") String nss, @QueryParam("username") String usrn) {
         AdapterRest adapter = new AdapterRest();

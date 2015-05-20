@@ -8,6 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import multixsoft.hospitapp.webservice.AdapterRest;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * REST Web Service

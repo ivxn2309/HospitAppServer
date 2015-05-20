@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
 import multixsoft.hospitapp.webservice.AdapterRest;
 import org.json.simple.JSONObject;
 
@@ -27,8 +28,11 @@ public class PrivacyControl {
     public PrivacyControl() {
         adapter = new AdapterRest();
     }
-
-    public int accessAsPatient(String nss, String password) {
+    @GET
+    @Path("accessaspatient")
+    @Produces("text/plain")
+    public int accessAsPatient( @QueryParam("nss") String nss, 
+            @QueryParam("password") String password) {
         if(!isValid(nss)){
             return -1;
         }
@@ -47,7 +51,11 @@ public class PrivacyControl {
         return 1;
     }
     
-    public int accessAsAdminDoctor(String username, String password) {
+    @GET
+    @Path("accessasadmindoctor")
+    @Produces("text/plain")
+    public int accessAsAdminDoctor(@QueryParam("username") String username, 
+            @QueryParam("password") String password) {
         if(!isValid(username)){
             return -1;
         }
@@ -71,11 +79,11 @@ public class PrivacyControl {
     }
     
     public String encrypt(String text, String key, String bits) {
-        return "";
+        return text;
     }
     
     public String decrypt(String text, String key, String bits) {
-        return "";
+        return text;
     }
     
     private boolean isValid(String string) {

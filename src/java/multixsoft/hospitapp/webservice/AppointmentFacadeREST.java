@@ -93,10 +93,9 @@ public class AppointmentFacadeREST extends AbstractFacade<Appointment> {
         int dia = Integer.parseInt(date.split("/")[0]);
         int mes = Integer.parseInt(date.split("/")[1]);
         int year = Integer.parseInt(date.split("/")[2]);
-        String sql = "SELECT a FROM Appointment a WHERE a.doctorUsername = :usrn AND"
-                + " a.date = :d";
-        Query query = getEntityManager().createQuery(sql).setParameter("usrn", new Doctor(usrn))
-                .setParameter("d", new Date(dia, mes, year).getTime());
+        Date fecha = new Date(dia, mes, year);
+        String sql = "SELECT a FROM Appointment a WHERE a.doctorUsername.username = :usrn AND a.date = :fecha";
+        Query query = getEntityManager().createQuery(sql).setParameter("usrn", usrn).setParameter("fecha", fecha.getTime());
         List<Appointment> apps = query.getResultList();
         return apps;
     }
