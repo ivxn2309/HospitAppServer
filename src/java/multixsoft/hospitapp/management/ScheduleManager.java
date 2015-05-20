@@ -50,8 +50,9 @@ public class ScheduleManager {
         adapter = new AdapterRest();
     }
 
-    @PUT
+    @GET
     @Path("/cancelappointment")
+    @Produces("text/plain")
     public boolean cancelAppointment(@QueryParam("idAppointment") String id){
         JSONObject appointment = getAppointmentFromId(id);
          if(appointment.isEmpty()){
@@ -61,8 +62,9 @@ public class ScheduleManager {
         return adapter.put("appointment",appointment.toJSONString());
     }
     
-    @PUT
+    @GET
     @Path("/finishappointment")
+    @Produces("text/plain")
     public boolean setAppointmentFinish(@QueryParam("idAppointment") String id){
         JSONObject appointment = getAppointmentFromId(id);
         if(appointment.isEmpty()){
@@ -72,8 +74,9 @@ public class ScheduleManager {
         return adapter.put("appointment", appointment.toJSONString());
     }
     
-    @POST
+    @GET
     @Path("/scheduleappointment")
+    @Produces("text/plain")
     public long scheduleAppointment(@QueryParam("Appointment") String appointment){
         JSONObject appointmentToSchedule = (JSONObject) JSONValue.parse(appointment);
         if(isAppointmentValid(appointmentToSchedule)){
@@ -102,7 +105,7 @@ public class ScheduleManager {
     @GET
     @Path("/availableschedule")
     @Produces("application/json")
-    public String getAvailableSchedule(@QueryParam("username") String usr, boolean original){
+    public String getAvailableSchedule(@QueryParam("username") String usr, @QueryParam("original") boolean original){
         JSONObject doctor = getDoctorFromUsername(usr);
         if(doctor.isEmpty()){
             return null;
@@ -128,7 +131,6 @@ public class ScheduleManager {
                 putScheduleByDay(day, newInterval, doctorSchedule);
             }
         }
-        adapter.put("schedule", doctorSchedule.toJSONString());
         return doctorSchedule.toJSONString();
     }
     
@@ -166,7 +168,7 @@ public class ScheduleManager {
         return true;
     }
     
-    private String scheduleIntervalByDay(@QueryParam("idSchedule") String idSchedule, int day){
+    private String scheduleIntervalByDay(String idSchedule,  int day){
         JSONObject schedule = getSchedule(idSchedule);
      
         if(day == 2){
@@ -189,7 +191,7 @@ public class ScheduleManager {
         String idAppointment = appointment.get("idAppointment").toString();
         boolean appointmentAlreadyExists = comparePatientAndDate(idAppointment);
         if((!patientDoctorExists(appointment)) 
-                || actualDate.isBefore(appointmentDate)
+                || appointmentDate.isBefore(actualDate)
                 || appointmentAlreadyExists){
             return false;
         }else{
@@ -198,9 +200,9 @@ public class ScheduleManager {
     }
     
     private boolean patientDoctorExists(JSONObject appointment){
-        String doctorUsername = appointment.get("username").toString();
+        String doctorUsername = appointment.get("doctorUsername").toString();
         JSONObject doctor = getDoctorFromUsername(doctorUsername);
-        String patientNss = appointment.get("nss").toString();
+        String patientNss = appointment.get("patientNss").toString();
         JSONObject patient = getPatientFromNss(patientNss);
         
         if(doctor.isEmpty() || patient.isEmpty()){
@@ -243,13 +245,13 @@ public class ScheduleManager {
     
     
      /* compara si dos appointments tienen el mismo paciente y fecha */
-    private boolean comparePatientAndDate(@QueryParam("idAppointment") String id){
+    private boolean comparePatientAndDate(String id){
        JSONObject appointment =  getAppointmentFromId(id);
        JSONArray appointments = (JSONArray)adapter.get("appointment");
          
         for (Object app: appointments ){
-            if(((JSONObject)app).get("nss") == appointment.get("nss") 
-                     && appointment.get("date") == appointment.get("date")){
+            if(((JSONObject)app).get("patientNss").equals(appointment.get("patientNss")) 
+                     && ((JSONObject)app).get("date").equals(appointment.get("date"))){
                  return true;
             }
         }

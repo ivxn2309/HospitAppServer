@@ -18,9 +18,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import multixsoft.hospitapp.entities.Appointment;
 import multixsoft.hospitapp.entities.Doctor;
 import multixsoft.hospitapp.entities.Schedule;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -92,9 +94,10 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
     @GET
     @Path("/doctorschedule")
     @Produces("application/json")
-    public Schedule getDoctorSchedule(Doctor doctor){
-        String sql = "SELECT * FROM Schedule WHERE doctorUsername = :usrn";
-        Query query = getEntityManager().createQuery(sql).setParameter("usrn", doctor.getUsername());
+    @Consumes("text/plain")
+    public Schedule getDoctorSchedule(@QueryParam("username") String usrn){
+        String sql = "SELECT s FROM Schedule s WHERE s.doctorUsername.username = :usrn";
+        Query query = getEntityManager().createQuery(sql).setParameter("usrn", usrn);
         Schedule doctorSchedule = (Schedule) query.getSingleResult();
         return doctorSchedule;
     }
@@ -102,11 +105,12 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
     @GET
     @Path("/unfinishedappointments")
     @Produces("application/json")
-    public List<Appointment> getDoctorUnfinishedAppointments(Doctor doctor){
-        String sql = "SELECT * FROM Appointment WHERE doctorUsername = :usrn AND"
-                + " AND isFinished is false";
-        Query query = getEntityManager().createQuery(sql).setParameter("usrn", doctor.getUsername());
-    
+    @Consumes("text/plain")
+    public List<Appointment> getDoctorUnfinishedAppointments(@QueryParam("username") String usrn){
+        String sql = "SELECT a FROM Appointment a WHERE a.doctorUsername.username = :usrn AND"
+                + " isFinished = 0";
+        
+        Query query = getEntityManager().createQuery(sql).setParameter("usr", usrn);
         List<Appointment> appointments = query.getResultList();
         return appointments;
     }
