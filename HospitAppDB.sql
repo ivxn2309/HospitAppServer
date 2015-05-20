@@ -67,8 +67,9 @@ DROP TABLE IF EXISTS Appointment;
 CREATE TABLE IF NOT EXISTS Appointment (
     id_appointment SERIAL,
     date DATE,
-    is_finshed TINYINT(1),
+    is_finished TINYINT(1),
     iscanceled TINYINT(1),
+    time VARCHAR(50),
     patient_nss VARCHAR(64) NOT NULL,
     doctor_username VARCHAR(100) NOT NULL,
     FOREIGN KEY(doctor_username) REFERENCES Doctor(username),

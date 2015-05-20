@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package multixsoft.hospitapp.entities;
 
 import java.io.Serializable;
@@ -37,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Appointment.findAll", query = "SELECT a FROM Appointment a"),
     @NamedQuery(name = "Appointment.findByIdAppointment", query = "SELECT a FROM Appointment a WHERE a.idAppointment = :idAppointment"),
     @NamedQuery(name = "Appointment.findByDate", query = "SELECT a FROM Appointment a WHERE a.date = :date"),
-    @NamedQuery(name = "Appointment.findByIsFinshed", query = "SELECT a FROM Appointment a WHERE a.isFinshed = :isFinshed"),
+    @NamedQuery(name = "Appointment.findByIsFinished", query = "SELECT a FROM Appointment a WHERE a.isFinished = :isFinished"),
     @NamedQuery(name = "Appointment.findByIscanceled", query = "SELECT a FROM Appointment a WHERE a.iscanceled = :iscanceled")})
 public class Appointment implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -49,10 +44,12 @@ public class Appointment implements Serializable {
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
     private Date date;
-    @Column(name = "is_finshed")
-    private Boolean isFinshed;
+    @Column(name = "is_finished")
+    private Boolean isFinished;
     @Column(name = "iscanceled")
     private Boolean iscanceled;
+    @Column(name = "time")
+    private String time;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAppointment")
     private Collection<Report> reportCollection;
     @JoinColumn(name = "doctor_username", referencedColumnName = "username")
@@ -85,16 +82,24 @@ public class Appointment implements Serializable {
         this.date = date;
     }
 
-    public Boolean getIsFinshed() {
-        return isFinshed;
+    public Boolean getIsFinished() {
+        return isFinished;
     }
 
-    public void setIsFinshed(Boolean isFinshed) {
-        this.isFinshed = isFinshed;
+    public void setIsFinished(Boolean isFinished) {
+        this.isFinished = isFinished;
     }
 
     public Boolean getIscanceled() {
         return iscanceled;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public void setIscanceled(Boolean iscanceled) {

@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+=======
+>>>>>>> server_ut
 package multixsoft.hospitapp.webservice;
 
 import java.io.BufferedReader;
@@ -17,10 +20,19 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 /**
+<<<<<<< HEAD
  *
  * @author maritza
  */
 public class AdapterRest {
+=======
+ * @author Ivan Tovar
+ * @version 1.0
+ * @date 13/May/2015
+ */
+public class AdapterRest {
+
+>>>>>>> server_ut
     private String base = "http://localhost:8080/HospitAppServer/webresources/";
 
     public AdapterRest(String address) {

@@ -24,7 +24,7 @@ import multixsoft.hospitapp.entities.Report;
  * @author Ivan Tovar
  */
 @Stateless
-@Path("multixsoft.hospitapp.entities.report")
+@Path("report")
 public class ReportFacadeREST extends AbstractFacade<Report> {
     @PersistenceContext(unitName = "HospitAppServerPU")
     private EntityManager em;
