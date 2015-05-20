@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+=======
+>>>>>>> server_ut
 package multixsoft.hospitapp.webservice;
 
 import java.io.BufferedReader;
@@ -12,12 +20,19 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 /**
+<<<<<<< HEAD
+ *
+ * @author maritza
+ */
+public class AdapterRest {
+=======
  * @author Ivan Tovar
  * @version 1.0
  * @date 13/May/2015
  */
 public class AdapterRest {
 
+>>>>>>> server_ut
     private String base = "http://localhost:8080/HospitAppServer/webresources/";
 
     public AdapterRest(String address) {
@@ -71,7 +86,7 @@ public class AdapterRest {
         return resultado;
     }
     
-    public void post(String path, String jsonObject){
+    public boolean post(String path, String jsonObject){
         byte [] pack = jsonObject.getBytes();
         try {
             URL url = new URL(base + path);
@@ -89,16 +104,19 @@ public class AdapterRest {
             //System.out.println("Codigo recibido" + codigo);
             if (codigo / 100 != 2) {
                 //System.out.println("Error en Codigo recibido" + codigo);
-                return;
+                return true;
             }
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return false;
     }
     
-    public void put(String path, String jsonObject){
+    public boolean put(String path, String jsonObject){
         byte [] pack = jsonObject.getBytes();
         try {
             URL url = new URL(base + path);
@@ -116,12 +134,15 @@ public class AdapterRest {
             //System.out.println("Codigo recibido" + codigo);
             if (codigo / 100 != 2) {
                 //System.out.println("Error en Codigo recibido" + codigo);
-                return;
+                return true;
             }
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return false;
     }
 }
