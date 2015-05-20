@@ -8,6 +8,7 @@ package multixsoft.hospitapp.management;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
@@ -39,19 +40,18 @@ public class DoctorManager {
      * @param doc corresponde a la representacion del Doctor Manager que se creará
      * @return un String que contiene el nombre de usuario del doctor que se ha creado
     **/
-    @POST
+    @GET
     @Path("/savenewdoctor")
-    @Consumes ("aplication/json")
     @Produces("text/plain")
     public String postSaveNewDoctor(
         @QueryParam("doctor") String doc){
         AdapterRest adapter = new AdapterRest();
         try{
         	JSONObject doctorObject = (JSONObject)new JSONParser().parse(doc);
-        	String path = "doctor/id=" + doctorObject.get("username");
+        	String path = "doctor/" + doctorObject.get("username");
         	JSONObject doctorRequest = (JSONObject) adapter.get(path);
         	if(doctorRequest.isEmpty()){
-            	path = "doctor/create";
+            	path = "doctor";
             	adapter.post(path,doctorObject.toJSONString());
                     return doctorObject.get("username").toString();
         	}else{
@@ -67,20 +67,19 @@ public class DoctorManager {
     * @param sched es la representacion del Schedule Manager que se creará
     * @return Un String que contiene el id del Schedule Manager que se creó
     **/
-    @POST
+    @GET
     @Path("/setschedule")
-    @Consumes("application/json")
     @Produces("text/plain")
     public String putSetSchedule(
         @QueryParam("schedule") String sched){
         AdapterRest adapter = new AdapterRest();
         try{
         	JSONObject scheduleObject = (JSONObject)new JSONParser().parse(sched);
-        	String path = "schedule/id=" + scheduleObject.get("idSchedule");
+        	String path = "schedule" + scheduleObject.get("idSchedule");
         	JSONObject scheduleRequest = (JSONObject) adapter.get(path);
         	if(scheduleRequest.isEmpty()){
-            	path = "schedule/create";
-            	adapter.put(path, scheduleRequest.toJSONString());
+            	path = "schedule";
+            	adapter.post(path, scheduleRequest.toJSONString());
                     return scheduleObject.get("idSchedule").toString();
         	}else{
                     return null;
