@@ -1,6 +1,6 @@
 package multixsoft.hospitapp.management;
 
-import javax.ws.rs.PUT;
+import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Path;
@@ -24,7 +24,7 @@ public class PatientMapper {
     public PatientMapper() {
     }
 
-    @PUT
+    @GET
     @Path("/mappatient")
     @Produces("text/plain")
     public boolean mapPatient(
