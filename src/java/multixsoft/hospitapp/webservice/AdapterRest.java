@@ -116,9 +116,7 @@ public class AdapterRest {
             os.write(pack);
 
             int codigo = conn.getResponseCode();
-            //System.out.println("Codigo recibido" + codigo);
-            if (codigo / 100 != 2) {
-                //System.out.println("Error en Codigo recibido" + codigo);
+            if (codigo / 100 == 2) {
                 return true;
             }
         } catch (MalformedURLException ex) {

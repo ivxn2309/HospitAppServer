@@ -31,11 +31,12 @@ public class PatientMapper {
             @QueryParam("nss") String nss, @QueryParam("username") String usrn) {
         AdapterRest adapter = new AdapterRest();
         JSONObject jObj = (JSONObject)adapter.get("patient/"+nss);
+        JSONObject jObjDoc = (JSONObject)adapter.get("doctor/"+usrn);
         if (jObj.isEmpty()) {
             return false;
         }
         
-        jObj.put("doctorUsername", usrn);        
-        return adapter.put("patient", jObj.toJSONString());
+        jObj.put("doctorUsername", jObjDoc); 
+        return adapter.put("patient/"+jObj.get("nss"), jObj.toJSONString());
     }
 }

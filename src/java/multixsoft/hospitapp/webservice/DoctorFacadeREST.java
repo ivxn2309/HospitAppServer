@@ -108,9 +108,9 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
     @Consumes("text/plain")
     public List<Appointment> getDoctorUnfinishedAppointments(@QueryParam("username") String usrn){
         String sql = "SELECT a FROM Appointment a WHERE a.doctorUsername.username = :usrn AND"
-                + " isFinished = 0";
+                + " a.isFinished = 0";
         
-        Query query = getEntityManager().createQuery(sql).setParameter("usr", usrn);
+        Query query = getEntityManager().createQuery(sql).setParameter("usrn", usrn);
         List<Appointment> appointments = query.getResultList();
         return appointments;
     }

@@ -1,5 +1,6 @@
 package multixsoft.hospitapp.management;
 
+import java.util.Calendar;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -61,7 +62,7 @@ public class ScheduleManager {
             return false;
         }
         appointment.put("iscanceled", true);
-        return adapter.put("appointment",appointment.toJSONString());
+        return adapter.put("appointment/" + appointment.get("idAppointment"), appointment.toJSONString());
     }
     
     @GET
@@ -73,7 +74,7 @@ public class ScheduleManager {
             return false;
         }
         appointment.put("isFinished", true);
-        return adapter.put("appointment", appointment.toJSONString());
+        return adapter.put("appointment/" + appointment.get("idAppointment"), appointment.toJSONString());
     }
     
     @GET
@@ -81,10 +82,11 @@ public class ScheduleManager {
     @Produces("text/plain")
     public long scheduleAppointment(@QueryParam("Appointment") String appointment){
         JSONObject appointmentToSchedule = (JSONObject) JSONValue.parse(appointment);
-        if(isAppointmentValid(appointmentToSchedule)){
+        if(isAppointmentValid(appointmentToSchedule)) {
             return -1;
-        }else{
-            adapter.put("appointment", appointmentToSchedule.toJSONString());
+        }
+        else {
+            adapter.post("appointment", appointmentToSchedule.toJSONString());
             return (Long) appointmentToSchedule.get("idAppointment");
         }
     }
@@ -127,7 +129,7 @@ public class ScheduleManager {
             
             if(appDate.belongsThisWeek()){
                 int day = appDate.getDayOfWeek();
-                int appointmentTime = (Integer) ((JSONObject)appointment).get("time");
+                int appointmentTime = Integer.parseInt((String) ((JSONObject)appointment).get("time"));
                 String scheduleTime = scheduleIntervalByDay(doctorSchedule.get("idSchedule").toString(), day);
                 String newInterval = intervalFilter.removeInterval(appointmentTime, scheduleTime);
                 putScheduleByDay(day, newInterval, doctorSchedule);
@@ -188,29 +190,24 @@ public class ScheduleManager {
     }
     
     private boolean isAppointmentValid(JSONObject appointment){
-        Date actualDate = new Date();
-        Date appointmentDate = getAppointmentDate(appointment);
         String idAppointment = appointment.get("idAppointment").toString();
         boolean appointmentAlreadyExists = comparePatientAndDate(idAppointment);
-        if((!patientDoctorExists(appointment)) 
-                || appointmentDate.isBefore(actualDate)
-                || appointmentAlreadyExists){
+        if(!patientDoctorExists(appointment)) {
             return false;
-        }else{
-            return true;
         }
+        return appointmentAlreadyExists;
     }
     
     private boolean patientDoctorExists(JSONObject appointment){
+        /*
         String doctorUsername = appointment.get("doctorUsername").toString();
         JSONObject doctor = getDoctorFromUsername(doctorUsername);
         String patientNss = appointment.get("patientNss").toString();
         JSONObject patient = getPatientFromNss(patientNss);
-        
-        if(doctor.isEmpty() || patient.isEmpty()){
-            return false;
-        }
-        return true;
+        */
+        JSONObject doctor = (JSONObject)appointment.get("doctorUsername");
+        JSONObject patient = (JSONObject)appointment.get("patientNss");
+        return !(doctor.isEmpty() || patient.isEmpty());
     }
     
     private JSONObject getAppointmentFromId(String id){
@@ -218,7 +215,12 @@ public class ScheduleManager {
     }
     
     private Date getAppointmentDate(JSONObject appointment){
-        return (Date) appointment.get("date");
+        Calendar calendar = Calendar.getInstance();
+        String [] strDate = ((String)appointment.get("date")).split("-");
+        int year = Integer.parseInt(strDate[0]);
+        int mes = Integer.parseInt(strDate[1]);
+        int dia = Integer.parseInt(strDate[2].substring(0, 2));
+        return new Date(dia, mes, year);
     }
     
     private JSONObject getPatientFromNss(String nss){
@@ -249,9 +251,11 @@ public class ScheduleManager {
      /* compara si dos appointments tienen el mismo paciente y fecha */
     private boolean comparePatientAndDate(String id){
        JSONObject appointment =  getAppointmentFromId(id);
+       if(appointment == null) {
+           return false;
+       }
        JSONArray appointments = (JSONArray)adapter.get("appointment");
-         
-        for (Object app: appointments ){
+       for (Object app: appointments ){
             if(((JSONObject)app).get("patientNss").equals(appointment.get("patientNss")) 
                      && ((JSONObject)app).get("date").equals(appointment.get("date"))){
                  return true;

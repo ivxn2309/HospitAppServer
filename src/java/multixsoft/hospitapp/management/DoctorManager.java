@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package multixsoft.hospitapp.management;
 
 import javax.ws.rs.core.Context;
@@ -45,18 +40,20 @@ public class DoctorManager {
     @Produces("text/plain")
     public String postSaveNewDoctor(
         @QueryParam("doctor") String doc){
+        
         AdapterRest adapter = new AdapterRest();
         try{
-        	JSONObject doctorObject = (JSONObject)new JSONParser().parse(doc);
-        	String path = "doctor/" + doctorObject.get("username");
-        	JSONObject doctorRequest = (JSONObject) adapter.get(path);
-        	if(doctorRequest.isEmpty()){
-            	path = "doctor";
-            	adapter.post(path,doctorObject.toJSONString());
+               JSONObject doctorObject = (JSONObject)new JSONParser().parse(doc);
+               String path = "doctor/" + doctorObject.get("username");
+               JSONObject doctorRequest = (JSONObject) adapter.get(path);
+               if(doctorRequest==null || doctorRequest.isEmpty()){
+                    path = "doctor";
+                    adapter.post(path,doctorObject.toJSONString());
                     return doctorObject.get("username").toString();
-        	}else{
+        	} else{
                     return null;
         	}
+               
     	}catch(org.json.simple.parser.ParseException io){
     		return null;
     	}
@@ -74,18 +71,20 @@ public class DoctorManager {
         @QueryParam("schedule") String sched){
         AdapterRest adapter = new AdapterRest();
         try{
+                
         	JSONObject scheduleObject = (JSONObject)new JSONParser().parse(sched);
-        	String path = "schedule" + scheduleObject.get("idSchedule");
+                String path = "schedule" + scheduleObject.get("idSchedule");
         	JSONObject scheduleRequest = (JSONObject) adapter.get(path);
-        	if(scheduleRequest.isEmpty()){
-            	path = "schedule";
-            	adapter.post(path, scheduleRequest.toJSONString());
+                
+        	if(scheduleRequest == null || scheduleRequest.isEmpty()){
+                    path = "schedule";
+                    adapter.post(path, scheduleObject.toJSONString());
                     return scheduleObject.get("idSchedule").toString();
         	}else{
                     return null;
         	}
         }catch(org.json.simple.parser.ParseException e){
-        	return null;
+               return null;
         }
     }
 }
