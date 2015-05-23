@@ -8,7 +8,7 @@ before_script:
   - mkdir build
   - sudo apt-get --yes --force-yes update
   - sudo apt-get --yes --force-yes install python-software-properties
-  - sudo add-apt-repository --yes --force-yes ppa:webupd8team/java
+  - sudo add-apt-repository --y ppa:webupd8team/java
   - sudo apt-get --yes --force-yes update
   - sudo apt-get --yes --force-yes install oracle-java7-installer
   - wget download.java.net/glassfish/4.0/release/glassfish-4.0.zip
