@@ -5,7 +5,10 @@ jdk:
   - oraclejdk7
   
 before_script:
-  - mkdir build
+  - ls -l
+  - ls -l ../
+  - ls -l ../../
+  - ls -l ../../../
   - sudo apt-get --yes --force-yes update
   - sudo apt-get --yes --force-yes install python-software-properties
   - sudo add-apt-repository --y ppa:webupd8team/java
@@ -17,11 +20,12 @@ before_script:
   - export CLASSPATH=lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:src/:bin/
   - export PATH=/opt/glassfish4/bin/:$PATH
   - sudo chmod +x /opt/glassfish4/bin/asadmin
-  - cd /opt/glassfish4/bin/
-  - sudo ./asadmin start-domain
+#- cd /opt/glassfish4/bin/
+  - sudo .//opt/glassfish4/bin/asadmin start-domain
   - cd
   - ls -l
   
 script:
+  - ls -l
   - javac -d bin src/java/multixsoft/hospitapp/unittest/ScheduleManagerTest.java
   - java org.junit.runner.JUnitCore multixsoft.hospitapp.unittest.ScheduleManagerTest
