@@ -1,13 +1,8 @@
 package multixsoft.hospitapp.unittest;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.*;
 import multixsoft.hospitapp.management.ScheduleManager;
-import multixsoft.hospitapp.entities.Appointment;
 import multixsoft.hospitapp.utilities.Date;
-import multixsoft.hospitapp.entities.Patient;
-import multixsoft.hospitapp.entities.Doctor;
 import multixsoft.hospitapp.webservice.AdapterRest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,7 +25,7 @@ public class ScheduleManagerTest {
     
     @BeforeClass
     public void setUpClass(){
-        adapter = new AdapterRest();
+        adapter = new AdapterRest("http://127.0.0.1:4848/HospitAppServer/webresources/");
         scheduleManager = new ScheduleManager();
         
         doctor = new JSONObject();

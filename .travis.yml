@@ -24,9 +24,11 @@ before_script:
   - sudo ./asadmin start-domain
   - cd
   - cd build/ivxn2309/HospitAppServer
-  
-  
-script:
-  - ls -l
+  - mkdir bin
   - javac -d bin src/java/multixsoft/hospitapp/unittest/ScheduleManagerTest.java
+  - cd bin
+  - cp dist/HospitAppServer.war /opt/glassfish4/glassfish/domains/domain1/
+  
+  
+script:  
   - java org.junit.runner.JUnitCore multixsoft.hospitapp.unittest.ScheduleManagerTest
