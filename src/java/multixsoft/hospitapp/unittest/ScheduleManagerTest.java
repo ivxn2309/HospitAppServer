@@ -86,28 +86,31 @@ public class ScheduleManagerTest {
     
      @Test
     public void testCancelAppointment() {
-        boolean dateIsCanceled = scheduleManager.cancelAppointment(
-            (String) requestAppointment.get("idAppointment")
-        );
+         boolean dateIsCanceled = (Boolean) adapter
+				.get("schedulemanager/cancelappointment/"
+						+ requestAppointment.get("idAppointment"));
+
         assertEquals(dateIsCanceled, true);
+        
     }
     
      @Test
     public void testSetAppointmentFinish(){
         Date requestDate = new Date(22,5,2015);
-        boolean dateIsFinished = scheduleManager.setAppointmentFinish(
-            (String) requestAppointment.get("idAppointment")
-        );
-        
-        assertEquals(dateIsFinished, true);
+        boolean dateIsFinished = (Boolean) adapter
+				.get("schedulemanager/finishappointment/"
+						+ requestAppointment.get("idAppointment"));
+       assertEquals(dateIsFinished, true);
     }
 
      @Test 
     public void testGetAvailableScheduleaFalse(){
         boolean scheduleIsOriginal = false;
-       
-        String actualAvailableSchedule = scheduleManager.getAvailableSchedule(
-                "jose", scheduleIsOriginal);
+       String actualAvailableSchedule = (String) adapter
+				.get("schedulemanager/availableschedule?username="
+						+ requestAppointment.get("doctorUsername")
+						+ "&original=" + scheduleIsOriginal);
+
         
         assertEquals(doctorAvailableSchedule.toJSONString(), actualAvailableSchedule);       
     }
@@ -116,25 +119,32 @@ public class ScheduleManagerTest {
     public void testGetAvailableScheduleaTrue(){
         boolean scheduleIsOriginal = true;
        
-        String actualAvailableSchedule = scheduleManager.getAvailableSchedule(
-                "jose", scheduleIsOriginal);
-        
+       		String actualAvailableSchedule = (String) adapter
+				.get("schedulemanager/availableschedule?username="
+						+ requestAppointment.get("doctorUsername")
+						+ "&original=" + scheduleIsOriginal);
+
         assertEquals(doctorSchedule.toJSONString(), actualAvailableSchedule);       
     }
     
     @Test
     public void testObtainAllPatientsDated() {
-        JSONArray array = (JSONArray) JSONValue.parse(scheduleManager.getAllAppointmentsFor("jose", "25-5-2015"));
+        String actualAvailableSchedule = (String) adapter
+				.get("schedulemanager/appointmentsfor?username="
+						+ requestAppointment.get("doctorUsername") + "&date="
+						+ requestAppointment.get("date"));
+
+        JSONArray array = (JSONArray) JSONValue.parse(actualAvailableSchedule);
         //List<Appointment> apps = new ArrayList<>();
         assertEquals(array.size(), 1);
     }
     
     @Test
     public void testScheduleAppointment(){
-        long appointmentId = scheduleManager.scheduleAppointment(
-            (String)requestAppointment.get("idAppointment")
-        );
-        
+       		long appointmentId = (Long) adapter
+				.get("schedulemanager/scheduleappointment?Appointment="
+						+ requestAppointment.toJSONString());
+
         assertEquals(appointmentId, requestAppointment.get("idAppointment"));
     }
     
@@ -148,10 +158,11 @@ public class ScheduleManagerTest {
         expectedAppointment.put("date", dateExpectedAppointment);
         expectedAppointment.put("isFinished", false);
         
-        
-        String actualAppointment = scheduleManager.getNextAppointment(
-                "123456789");
-        
+       		String actualAppointment = (String) adapter
+				.get("schedulemanager/nextappointment?nss="
+						+ requestAppointment.get("patientNss"));
+
+
         assertEquals(actualAppointment, expectedAppointment.toJSONString());
     }
     
