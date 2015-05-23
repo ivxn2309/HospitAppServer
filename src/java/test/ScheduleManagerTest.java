@@ -73,7 +73,6 @@ public class ScheduleManagerTest {
         doctorAvailableSchedule.put("friday","10-15");
         doctorAvailableSchedule.put("doctorUsername", doctor.toJSONString());
         
-        // Duda al crear doctor y patient, aquí si se necesitaría facade?
         adapter.post("doctor", doctor.toJSONString());
         adapter.post("patient", patient.toJSONString());
         
@@ -85,10 +84,10 @@ public class ScheduleManagerTest {
     
     @Test
     public void testCancelAppointment() {
-         boolean dateIsCanceled = (Boolean) adapter
-				.get("schedulemanager/cancelappointment/"
-						+ requestAppointment.get("idAppointment"));
-
+        long id = (Long) requestAppointment.get("idAppointment");
+        System.out.println("Debug: id=" + id);
+        boolean dateIsCanceled = (Boolean) adapter.get("schedulemanager/cancelappointment/"+id);
+        System.out.println("Debug: date=" + dateIsCanceled);
         assertEquals(dateIsCanceled, true);
         
     }
