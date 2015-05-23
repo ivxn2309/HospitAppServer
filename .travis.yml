@@ -16,7 +16,7 @@ before_script:
   - sudo unzip glassfish-4.0.zip -d /opt
   - export CLASSPATH=lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:src/:bin/
   - export PATH=/opt/glassfish4/bin/:$PATH
-  - asadmin start-domain
+  - sudo asadmin start-domain
   
 script:
   - javac -d bin src/java/multixsoft/hospitapp/unittest/ScheduleManagerTest.java
