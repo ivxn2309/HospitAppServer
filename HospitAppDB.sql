@@ -128,3 +128,27 @@ CREATE TABLE IF NOT EXISTS Admin (
     name VARCHAR(100) NOT NULL,
     PRIMARY KEY(username)
 );
+
+-- ------------------------------------------------
+-- Test Data Dump
+-- ------------------------------------------------
+INSERT INTO `Doctor` (`username`, `password`, `first_name`, `last_name`, `license`, `specialty`) VALUES('bobby', 'pass', 'Bob', 'Marley', '12345678', 'Neurologia');
+INSERT INTO `Doctor` (`username`, `password`, `first_name`, `last_name`, `license`, `specialty`) VALUES('jaimito', 'pass', 'James', 'Arthur', '12345679', 'General');
+
+INSERT INTO `Patient` (`nss`, `password`, `first_name`, `last_name`, `address`, `is_active`, `doctor_username`) VALUES('110220112211', 'pass', 'Ivan', 'Tovar', 'Muy cerca de aqui', 1, 'bobby');
+INSERT INTO `Patient` (`nss`, `password`, `first_name`, `last_name`, `address`, `is_active`, `doctor_username`) VALUES('110220112212', 'pass', 'Ed', 'Sheeran', 'En un lugar mas alla', 1, 'jaimito');
+
+INSERT INTO `Schedule` (`id_schedule`, `doctor_username`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`) VALUES(1, 'bobby', '8-10,15-20', '8-20', NULL, '15-20', '8-15');
+INSERT INTO `Schedule` (`id_schedule`, `doctor_username`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`) VALUES(2, 'jaimito', '8-10,15-20', '8-20', '8-20', '15-20', '8-15');
+
+INSERT INTO `Appointment` (`id_appointment`, `date`, `is_finished`, `iscanceled`, `time`, `patient_nss`, `doctor_username`) VALUES(1, '2015-05-21', 0, 0, '5', '110220112212', 'jaimito');
+INSERT INTO `Appointment` (`id_appointment`, `date`, `is_finished`, `iscanceled`, `time`, `patient_nss`, `doctor_username`) VALUES(2, '2015-05-21', 0, 0, '5', '110220112211', 'bobby');
+
+-- ------------------------------------------------
+-- Database Test
+-- ------------------------------------------------
+SHOW TABLES;
+SELECT * FROM Patient;
+SELECT * FROM Doctor;
+SELECT * FROM Schedule;
+SELECT * FROM Appointment;
