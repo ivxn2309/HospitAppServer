@@ -2,4 +2,3 @@
 *.war
 *.ear
 build/
-/dist/
