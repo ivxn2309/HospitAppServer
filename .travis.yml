@@ -12,8 +12,8 @@ before_script:
   - sudo apt-get --yes --force-yes update
   - sudo apt-get --yes --force-yes install oracle-java7-installer
   - wget download.java.net/glassfish/4.0/release/glassfish-4.0.zip
-  - apt-get --yes --force-yes install unzip
-  - unzip glassfish-4.0.zip -d /opt
+  - sudo apt-get --yes --force-yes install unzip
+  - sudo unzip glassfish-4.0.zip -d /opt
   - export CLASSPATH=lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:src/:bin/:/opt/glassfish4/bin:$PATH
   - asadmin start-domain
   
