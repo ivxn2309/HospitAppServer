@@ -10,5 +10,5 @@ before_script:
   - ls
   
 script:
-  - javac -d bin src/java/multixsoft/hospitapp/unittest/ScheduleManager.java
-  - java org.junit.runner.JUnitCore multixsoft.hospitapp.unittest.FigurasTest
+  - javac -d bin src/java/multixsoft/hospitapp/unittest/ScheduleManageTest.java
+  - java org.junit.runner.JUnitCore multixsoft.hospitapp.unittest.ScheduleManageTest
