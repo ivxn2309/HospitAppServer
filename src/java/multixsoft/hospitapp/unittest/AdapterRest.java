@@ -1,4 +1,4 @@
-package multixsoft.hospitapp.webservice;
+package multixsoft.hospitapp.unittest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 /**

@@ -1,9 +1,6 @@
 package multixsoft.hospitapp.unittest;
 
 import org.junit.*;
-import multixsoft.hospitapp.management.ScheduleManager;
-import multixsoft.hospitapp.utilities.Date;
-import multixsoft.hospitapp.webservice.AdapterRest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -14,8 +11,6 @@ import static org.junit.Assert.assertEquals;
  * @author maritza
  */
 public class ScheduleManagerTest {
-    
-    private ScheduleManager scheduleManager;
     private JSONObject requestAppointment;
     private JSONObject doctorAvailableSchedule;
     private JSONObject doctorSchedule;
@@ -26,7 +21,6 @@ public class ScheduleManagerTest {
     @BeforeClass
     public void setUpClass(){
         adapter = new AdapterRest("http://127.0.0.1:4848/HospitAppServer/webresources/");
-        scheduleManager = new ScheduleManager();
         
         doctor = new JSONObject();
         doctor.put("username", "jose");

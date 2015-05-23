@@ -1,4 +1,4 @@
-package multixsoft.hospitapp.utilities;
+package multixsoft.hospitapp.unittest;
 
 public class Interval {
 	private int start;
