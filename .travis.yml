@@ -25,10 +25,9 @@ before_script:
   - cd
   - cd build/ivxn2309/HospitAppServer
   - mkdir bin
-  - javac -cp .:lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar -d bin src/test/ScheduleManagerTest.java
-  - cp dist/HospitAppServer.war /opt/glassfish4/glassfish/domains/domain1/
-  - cd bin 
-  - ls -l
+  - javac -cp .:lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar -d bin src/java/test/ScheduleManagerTest.java
   
-script:  
-  - java org.junit.runner.JUnitCore test.ScheduleManagerTest
+script:
+  - cp dist/HospitAppServer.war /opt/glassfish4/glassfish/domains/domain1/
+  - ls bin
+  - java org.junit.runner.JUnitCore bin/test.ScheduleManagerTest
