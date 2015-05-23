@@ -6,13 +6,13 @@ jdk:
   
 before_script:
   - mkdir build
-  - sudo apt-get update
-  - sudo apt-get install python-software-properties
-  - sudo add-apt-repository ppa:webupd8team/java
-  - sudo apt-get update
-  - sudo apt-get install oracle-java7-installer
+  - sudo apt-get --yes --force-yes update
+  - sudo apt-get --yes --force-yes install python-software-properties
+  - sudo add-apt-repository --yes --force-yes ppa:webupd8team/java
+  - sudo apt-get --yes --force-yes update
+  - sudo apt-get --yes --force-yes install oracle-java7-installer
   - wget download.java.net/glassfish/4.0/release/glassfish-4.0.zip
-  - apt-get install unzip
+  - apt-get --yes --force-yes install unzip
   - unzip glassfish-4.0.zip -d /opt
   - export CLASSPATH=lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:src/:bin/:/opt/glassfish4/bin:$PATH
   - asadmin start-domain
