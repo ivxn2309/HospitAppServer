@@ -1,4 +1,5 @@
 package multixsoft.hospitapp.utilities;
+
 public class Interval {
 	private int start;
 	private int end;
@@ -16,12 +17,21 @@ public class Interval {
 		}
 	}
 	
+	public String getHoursBetween(){
+		String hoursBetween="";
+		for(int i=this.start; i<this.end;i++){
+			hoursBetween+=i+",";
+		}
+		return hoursBetween;
+	}
+	
 	public boolean isInsideInterval(int hour){
 		return ((hour >= this.start) && (hour <= this.end));
 	}
 	
 	public String breakIntervals(int hour){
 		String timeInterval = start+"-"+hour+" ";
+		
 		if(!((hour+1) >= end)){
 			 timeInterval += (hour+1)+"-"+end;
 		}
@@ -42,5 +52,9 @@ public class Interval {
 
 	public void setEnd(int end) {
 		this.end = end;
-	}	
+	}
+	
+	public String toString(){
+		return this.start+"-"+this.end;
+	}
 }

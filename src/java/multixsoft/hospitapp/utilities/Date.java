@@ -143,6 +143,9 @@ public class Date {
         beginWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         endWeek.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
         
+        if(this.equals(new Date(beginWeek)) || this.equals(new Date(endWeek))){
+            return true;
+        }
         if(this.isAfter(new Date(beginWeek))) {
             return this.isBefore(new Date(endWeek));
         }
@@ -184,4 +187,34 @@ public class Date {
         return str.toString();
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + this.dia;
+        hash = 97 * hash + this.mes;
+        hash = 97 * hash + this.year;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Date other = (Date) obj;
+        if (this.dia != other.dia) {
+            return false;
+        }
+        if (this.mes != other.mes) {
+            return false;
+        }
+        if (this.year != other.year) {
+            return false;
+        }
+        return true;
+    }
+    
 }
