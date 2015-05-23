@@ -82,9 +82,8 @@ public class ScheduleManagerTest {
         adapter.post("schedule", doctorAvailableSchedule.toJSONString());
         
     }
-}
-    /*
-     @Test
+    
+    @Test
     public void testCancelAppointment() {
          boolean dateIsCanceled = (Boolean) adapter
 				.get("schedulemanager/cancelappointment/"
@@ -93,7 +92,8 @@ public class ScheduleManagerTest {
         assertEquals(dateIsCanceled, true);
         
     }
-    
+}
+    /*
      @Test
     public void testSetAppointmentFinish(){
         Date requestDate = new Date(22,5,2015);

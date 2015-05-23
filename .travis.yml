@@ -13,6 +13,7 @@ before_script:
   - sudo apt-get --yes --force-yes install python-software-properties
   - sudo add-apt-repository --y ppa:webupd8team/java
   - sudo apt-get --yes --force-yes update
+  - sudo apt-get --yes --force-yes install mysql-server
   - sudo apt-get --yes --force-yes install oracle-java7-installer
   - wget download.java.net/glassfish/4.0/release/glassfish-4.0.zip
   - sudo apt-get --yes --force-yes install unzip
@@ -24,6 +25,9 @@ before_script:
   - sudo ./asadmin start-domain
   - cd
   - cd build/ivxn2309/HospitAppServer
+  - mysql -u root
+  - source HospitAppDB.sql
+  - exit
   - mkdir bin  
   
 script:
