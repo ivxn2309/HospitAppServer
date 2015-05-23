@@ -1,4 +1,4 @@
-package multixsoft.hospitapp.unittest;
+package test;
 
 import org.junit.*;
 import org.json.simple.JSONArray;

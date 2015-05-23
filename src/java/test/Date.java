@@ -1,4 +1,4 @@
-package multixsoft.hospitapp.unittest;
+package test;
 
 import java.util.Calendar;
 
@@ -18,7 +18,6 @@ public class Date {
         dia = calendar.get(Calendar.DATE);
         mes = calendar.get(Calendar.MONTH) + 1;
         year = calendar.get(Calendar.YEAR);
-        this.calendar = calendar;
     }
     
     public Date(Calendar calendar) {
