@@ -21,7 +21,7 @@ before_script:
   - sudo ./asadmin start-domain
   - cd
   - cd build/ivxn2309/HospitAppServer
-  - mysql -e 'source HospitAppDB.sql;'
+  - mysql -e 'source HospitAppDB.sql;' -uroot
   - mkdir bin  
   
 script:
