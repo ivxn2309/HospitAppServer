@@ -19,13 +19,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author maritza
  */
-public class ScheduleManagerTest {
-    @Test
-    public void testCancelAppointment() {
-        assertEquals("1", "1");
-    }
-}
-/*
+
 public class ScheduleManagerTest {
     private JSONObject requestAppointment;
     private JSONObject doctorAvailableSchedule;
@@ -88,7 +82,8 @@ public class ScheduleManagerTest {
         adapter.post("schedule", doctorAvailableSchedule.toJSONString());
         
     }
-    
+}
+    /*
      @Test
     public void testCancelAppointment() {
          boolean dateIsCanceled = (Boolean) adapter
@@ -182,7 +177,7 @@ public class ScheduleManagerTest {
      }
   
 }
-
+*/
 class AdapterRest {
 
     private String base = "http://localhost:8080/HospitAppServer/webresources/";
@@ -507,4 +502,3 @@ class Date {
     }
     
 }
-*/
