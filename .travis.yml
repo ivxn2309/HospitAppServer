@@ -17,7 +17,10 @@ before_script:
   - export CLASSPATH=lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:src/:bin/
   - export PATH=/opt/glassfish4/bin/:$PATH
   - sudo chmod +x /opt/glassfish4/bin/asadmin
-  - sudo ./opt/glassfish4/bin/asadmin start-domain
+  - cd /opt/glassfish4/bin/
+  - sudo ./asadmin start-domain
+  - cd
+  - ls -l
   
 script:
   - javac -d bin src/java/multixsoft/hospitapp/unittest/ScheduleManagerTest.java
