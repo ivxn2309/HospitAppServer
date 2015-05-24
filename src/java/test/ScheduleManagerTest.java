@@ -30,7 +30,7 @@ public class ScheduleManagerTest {
     
     @Before
     public void setUp(){
-        adapter = new AdapterRest("http://127.0.0.1:4848/HospitAppServer/webresources/");
+        adapter = new AdapterRest("http://127.0.0.1:8080/HospitAppServer/webresources/");
         
         doctor = new JSONObject();
         doctor.put("username", "jose");
@@ -42,21 +42,23 @@ public class ScheduleManagerTest {
 
         patient = new JSONObject();
         patient.put("nss", "123456789");
+        patient.put("first_name", "Juan");
+        patient.put("last_name", "Perez");
         patient.put("password", "password");
-        patient.put("isActive", true);
+        patient.put("isActive", "true");
         patient.put("doctorUsername", doctor.toJSONString());
                 
         requestAppointment = new JSONObject();
-        requestAppointment.put("idAppointment",(long) 123445565);
+        requestAppointment.put("idAppointment", "123445565");
         requestAppointment.put("patientNss", patient.toJSONString());
         requestAppointment.put("doctorUsername", doctor.toJSONString());
-        requestAppointment.put("date", new Date(25,5,2015));
-        requestAppointment.put("isFinished", false);
-        requestAppointment.put("iscanceled", false);
+        requestAppointment.put("date", "25,5,2015");
+        requestAppointment.put("isFinished", "false");
+        requestAppointment.put("iscanceled", "false");
         requestAppointment.put("time","11");
         
         doctorSchedule = new JSONObject();
-        doctorSchedule.put("idSchedule",23345L);
+        doctorSchedule.put("idSchedule", "23345");
         doctorSchedule.put("monday","9-15");
         doctorSchedule.put("tuesday","9-13");
         doctorSchedule.put("wednesday","13-17");
@@ -65,12 +67,12 @@ public class ScheduleManagerTest {
         doctorSchedule.put("doctorUsername", doctor.toJSONString());
         
         doctorAvailableSchedule = new JSONObject();
-        doctorAvailableSchedule.put("idSchedule",23345L);
-        doctorAvailableSchedule.put("monday","9-11,12-15");
-        doctorAvailableSchedule.put("tuesday","9-13");
-        doctorAvailableSchedule.put("wednesday","13-17");
-        doctorAvailableSchedule.put("thursday","8-12");
-        doctorAvailableSchedule.put("friday","10-15");
+        doctorAvailableSchedule.put("idSchedule", "23345");
+        doctorAvailableSchedule.put("monday", "9-11,12-15");
+        doctorAvailableSchedule.put("tuesday", "9-13");
+        doctorAvailableSchedule.put("wednesday", "13-17");
+        doctorAvailableSchedule.put("thursday", "8-12");
+        doctorAvailableSchedule.put("friday", "10-15");
         doctorAvailableSchedule.put("doctorUsername", doctor.toJSONString());
         
         adapter.post("doctor", doctor.toJSONString());
@@ -89,11 +91,11 @@ public class ScheduleManagerTest {
     
     @Test
     public void testCancelAppointment() {
-        long id = (Long) requestAppointment.get("idAppointment");
+        String id = (String) requestAppointment.get("idAppointment");
         String isCancel = (String)adapter.get("schedulemanager/cancelappointment/"+id);
         //boolean dateIsCanceled = (Boolean) adapter.get("schedulemanager/cancelappointment/"+id);
         //assertEquals(dateIsCanceled, true);
-        assertEquals(isCancel, "true");
+        assertEquals("true", isCancel);
     }
 }
     /*
