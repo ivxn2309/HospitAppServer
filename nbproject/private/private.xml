@@ -3,12 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/src/java/multixsoft/hospitapp/management/ScheduleManager.java</file>
-            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/src/java/multixsoft/hospitapp/utilities/Date.java</file>
-            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/src/java/multixsoft/hospitapp/webservice/AdapterRest.java</file>
-            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/src/java/multixsoft/hospitapp/webservice/AppointmentFacadeREST.java</file>
-            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/src/java/multixsoft/hospitapp/webservice/PatientFacadeREST.java</file>
-            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/src/java/multixsoft/hospitapp/webservice/DoctorFacadeREST.java</file>
+            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/src/java/test/ScheduleManagerTest.java</file>
+            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/.travis.yml</file>
+            <file>file:/C:/Users/Ivan%20Tovar/Documents/NetBeansProjects/HospitAppServer/HospitAppDB.sql</file>
         </group>
     </open-files>
 </project-private>

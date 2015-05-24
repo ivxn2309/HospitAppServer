@@ -21,15 +21,15 @@ import static org.junit.Assert.assertEquals;
  */
 
 public class ScheduleManagerTest {
-    private static JSONObject requestAppointment;
-    private static JSONObject doctorAvailableSchedule;
-    private static JSONObject doctorSchedule;
-    private static AdapterRest adapter;
-    private static JSONObject doctor;
-    private static JSONObject patient;
+    JSONObject requestAppointment;
+    JSONObject doctorAvailableSchedule;
+    JSONObject doctorSchedule;
+    AdapterRest adapter;
+    JSONObject doctor;
+    JSONObject patient;
     
-    @BeforeClass
-    public static void setUpClass(){
+    @Before
+    public void setUp(){
         adapter = new AdapterRest("http://127.0.0.1:4848/HospitAppServer/webresources/");
         
         doctor = new JSONObject();
