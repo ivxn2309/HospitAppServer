@@ -21,168 +21,52 @@ import static org.junit.Assert.assertEquals;
  */
 
 public class ScheduleManagerTest {
-    JSONObject requestAppointment;
-    JSONObject doctorAvailableSchedule;
-    JSONObject doctorSchedule;
     AdapterRest adapter;
-    JSONObject doctor;
-    JSONObject patient;
+
+    public ScheduleManagerTest() {
+        adapter = new AdapterRest("http://127.0.0.1:8080/HospitAppServer/webresources/");
+    }
     
     @Before
     public void setUp(){
-        adapter = new AdapterRest("http://127.0.0.1:8080/HospitAppServer/webresources/");
-        
-        doctor = new JSONObject();
-        doctor.put("username", "jose");
-        doctor.put("password", "pass");
-        doctor.put("firstName", "Jose");
-        doctor.put("lastName", "Dominguez");
-        doctor.put("license", "34O34KDSFJ");
-        doctor.put("specialty", "Cardiologia");
-
-        patient = new JSONObject();
-        patient.put("nss", "123456789");
-        patient.put("first_name", "Juan");
-        patient.put("last_name", "Perez");
-        patient.put("password", "password");
-        patient.put("isActive", "true");
-        patient.put("doctorUsername", doctor.toJSONString());
-                
-        requestAppointment = new JSONObject();
-        requestAppointment.put("idAppointment", "123445565");
-        requestAppointment.put("patientNss", patient.toJSONString());
-        requestAppointment.put("doctorUsername", doctor.toJSONString());
-        requestAppointment.put("date", "25,5,2015");
-        requestAppointment.put("isFinished", "false");
-        requestAppointment.put("iscanceled", "false");
-        requestAppointment.put("time","11");
-        
-        doctorSchedule = new JSONObject();
-        doctorSchedule.put("idSchedule", "23345");
-        doctorSchedule.put("monday","9-15");
-        doctorSchedule.put("tuesday","9-13");
-        doctorSchedule.put("wednesday","13-17");
-        doctorSchedule.put("thursday","8-12");
-        doctorSchedule.put("friday","10-15");
-        doctorSchedule.put("doctorUsername", doctor.toJSONString());
-        
-        doctorAvailableSchedule = new JSONObject();
-        doctorAvailableSchedule.put("idSchedule", "23345");
-        doctorAvailableSchedule.put("monday", "9-11,12-15");
-        doctorAvailableSchedule.put("tuesday", "9-13");
-        doctorAvailableSchedule.put("wednesday", "13-17");
-        doctorAvailableSchedule.put("thursday", "8-12");
-        doctorAvailableSchedule.put("friday", "10-15");
-        doctorAvailableSchedule.put("doctorUsername", doctor.toJSONString());
-        
-        adapter.post("doctor", doctor.toJSONString());
-        adapter.post("patient", patient.toJSONString());
-        
-        adapter.post("appointment", requestAppointment.toJSONString());
-        adapter.post("schedule", doctorSchedule.toJSONString());
-        adapter.post("schedule", doctorAvailableSchedule.toJSONString());
         
     }
     
-    @Test
-    public void testExtraAlwaysTrue() {
-        assertEquals("1", "1");
-    }
-    
-    @Test
-    public void testCancelAppointment() {
-        String id = (String) requestAppointment.get("idAppointment");
-        String isCancel = (String)adapter.get("schedulemanager/cancelappointment/"+id);
-        //boolean dateIsCanceled = (Boolean) adapter.get("schedulemanager/cancelappointment/"+id);
-        //assertEquals(dateIsCanceled, true);
-        assertEquals("true", isCancel);
-    }
-}
-    /*
-     @Test
-    public void testSetAppointmentFinish(){
-        Date requestDate = new Date(22,5,2015);
-        boolean dateIsFinished = (Boolean) adapter
-				.get("schedulemanager/finishappointment/"
-						+ requestAppointment.get("idAppointment"));
-       assertEquals(dateIsFinished, true);
-    }
-
      @Test 
-    public void testGetAvailableScheduleaFalse(){
-        boolean scheduleIsOriginal = false;
-       String actualAvailableSchedule = (String) adapter
-				.get("schedulemanager/availableschedule?username="
-						+ requestAppointment.get("doctorUsername")
-						+ "&original=" + scheduleIsOriginal);
-
-        
-        assertEquals(doctorAvailableSchedule.toJSONString(), actualAvailableSchedule);       
+    public void testGetAvailableScheduleOriginal(){
+        JSONObject doc = (JSONObject) adapter.get("doctor/bobby");
+        JSONObject sch = (JSONObject) adapter.get("schedulemanager/availableschedule?username="+doc.get("username")+"&original=true");
+        String json = "{\"tuesday\":\"8-20\",\"friday\":\"8-15\",\"idSchedule\":1,\"thursday\":\"15-20\",\"doctorUsername\":{\"firstName\":\"Bob\",\"lastName\":\"Marley\",\"license\":\"12345678\",\"password\":\"pass\",\"specialty\":\"Neurologia\",\"username\":\"bobby\"},\"monday\":\"8-10,15-20\"}";
+        JSONObject expected = (JSONObject) JSONValue.parse(json);
+        assertEquals(expected, sch);       
     }
     
-    @Test 
-    public void testGetAvailableScheduleaTrue(){
-        boolean scheduleIsOriginal = true;
-       
-       		String actualAvailableSchedule = (String) adapter
-				.get("schedulemanager/availableschedule?username="
-						+ requestAppointment.get("doctorUsername")
-						+ "&original=" + scheduleIsOriginal);
-
-        assertEquals(doctorSchedule.toJSONString(), actualAvailableSchedule);       
+    @Test
+    public void testGetAvailableScheduleaModified(){
+        JSONObject doc = (JSONObject) adapter.get("doctor/bobby");
+        JSONObject sch = (JSONObject) adapter.get("schedulemanager/availableschedule?username="+doc.get("username")+"&original=false");
+        String json = "{\"tuesday\":\"8-20\",\"friday\":\"8-15\",\"idSchedule\":1,\"thursday\":\"15-20\",\"doctorUsername\":{\"firstName\":\"Bob\",\"lastName\":\"Marley\",\"license\":\"12345678\",\"password\":\"pass\",\"specialty\":\"Neurologia\",\"username\":\"bobby\"},\"monday\":\"8-10,15-20\"}";
+        JSONObject expected = (JSONObject) JSONValue.parse(json);
+        assertEquals(expected, sch);       
     }
     
     @Test
     public void testObtainAllPatientsDated() {
-        String actualAvailableSchedule = (String) adapter
-				.get("schedulemanager/appointmentsfor?username="
-						+ requestAppointment.get("doctorUsername") + "&date="
-						+ requestAppointment.get("date"));
-
-        JSONArray array = (JSONArray) JSONValue.parse(actualAvailableSchedule);
-        //List<Appointment> apps = new ArrayList<>();
-        assertEquals(array.size(), 1);
+        JSONArray apps = (JSONArray) adapter.get("schedulemanager/appointmentsfor?username=bobby&date=21/05/2015");
+        String json = "[{\"date\":\"2015-05-21T00:00:00-05:00\",\"idAppointment\":1,\"iscanceled\":false,\"patientNss\":{\"firstName\":\"Ivan\",\"lastName\":\"Tovar\",\"password\":\"pass\",\"address\":\"Muy cerca de aqui\",\"isActive\":true,\"doctorUsername\":{\"firstName\":\"Bob\",\"lastName\":\"Marley\",\"license\":\"12345678\",\"password\":\"pass\",\"specialty\":\"Neurologia\",\"username\":\"bobby\"},\"nss\":\"110220112211\"},\"time\":\"5\",\"isFinished\":false,\"doctorUsername\":{\"firstName\":\"Bob\",\"lastName\":\"Marley\",\"license\":\"12345678\",\"password\":\"pass\",\"specialty\":\"Neurologia\",\"username\":\"bobby\"}},{\"date\":\"2015-05-21T00:00:00-05:00\",\"idAppointment\":2,\"iscanceled\":false,\"patientNss\":{\"firstName\":\"Ivan\",\"lastName\":\"Tovar\",\"password\":\"pass\",\"address\":\"Muy cerca de aqui\",\"isActive\":true,\"doctorUsername\":{\"firstName\":\"Bob\",\"lastName\":\"Marley\",\"license\":\"12345678\",\"password\":\"pass\",\"specialty\":\"Neurologia\",\"username\":\"bobby\"},\"nss\":\"110220112211\"},\"time\":\"5\",\"isFinished\":false,\"doctorUsername\":{\"firstName\":\"Bob\",\"lastName\":\"Marley\",\"license\":\"12345678\",\"password\":\"pass\",\"specialty\":\"Neurologia\",\"username\":\"bobby\"}}]";
+        JSONArray expected = (JSONArray) JSONValue.parse(json);
+        assertEquals(expected, apps);
     }
-    
-    @Test
-    public void testScheduleAppointment(){
-       		long appointmentId = (Long) adapter
-				.get("schedulemanager/scheduleappointment?Appointment="
-						+ requestAppointment.toJSONString());
 
-        assertEquals(appointmentId, requestAppointment.get("idAppointment"));
-    }
-    
     @Test
     public void testGetNextAppointment(){
-        Date dateExpectedAppointment = new Date(26,5,2015);
-        JSONObject expectedAppointment = new JSONObject();
-        expectedAppointment.put("idAppointment", (long) 344532342);
-        expectedAppointment.put("patientNss", patient.toJSONString());
-        expectedAppointment.put("doctorUsername", doctor.toJSONString());
-        expectedAppointment.put("date", dateExpectedAppointment);
-        expectedAppointment.put("isFinished", false);
-        
-       		String actualAppointment = (String) adapter
-				.get("schedulemanager/nextappointment?nss="
-						+ requestAppointment.get("patientNss"));
-
-
-        assertEquals(actualAppointment, expectedAppointment.toJSONString());
+        JSONObject app = (JSONObject) adapter.get("schedulemanager/nextappointment?nss=110220112211");
+        String json = "{\"date\":\"2015-05-21T00:00:00-05:00\",\"idAppointment\":1,\"iscanceled\":false,\"patientNss\":{\"firstName\":\"Ivan\",\"lastName\":\"Tovar\",\"password\":\"pass\",\"address\":\"Muy cerca de aqui\",\"isActive\":true,\"doctorUsername\":{\"firstName\":\"Bob\",\"lastName\":\"Marley\",\"license\":\"12345678\",\"password\":\"pass\",\"specialty\":\"Neurologia\",\"username\":\"bobby\"},\"nss\":\"110220112211\"},\"time\":\"5\",\"isFinished\":false,\"doctorUsername\":{\"firstName\":\"Bob\",\"lastName\":\"Marley\",\"license\":\"12345678\",\"password\":\"pass\",\"specialty\":\"Neurologia\",\"username\":\"bobby\"}}";
+        JSONObject expected = (JSONObject) JSONValue.parse(json);
+        assertEquals(expected, app);
     }
-    
-     @AfterClass
-     public void tearDownClass() {
-        // Duda al eliminar doctor y patient, aquí si se necesitaría facade?
-        adapter.delete("appointment/"+(String)requestAppointment.get("idAppointment"));
-        adapter.delete("schedule"+(String)doctorSchedule.get("idSchedule"));
-        adapter.delete("schedule"+(String)doctorAvailableSchedule.get("idSchedule"));
-        adapter.delete("patient/"+(String)patient.get("nss"));
-        adapter.delete("doctor/"+(String)doctor.get("username"));
-     }
-  
 }
-*/
+
 class AdapterRest {
 
     private String base = "http://localhost:8080/HospitAppServer/webresources/";
