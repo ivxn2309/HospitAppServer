@@ -91,6 +91,11 @@ public class ScheduleManagerTest {
         assertEquals(dateIsCanceled, true);
         
     }
+    
+    @Test
+    public void testExtraAlwaysTrue() {
+        assertEquals("1", "1");
+    }
 }
     /*
      @Test
