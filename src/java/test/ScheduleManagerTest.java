@@ -92,7 +92,6 @@ public class ScheduleManagerTest {
         long id = (Long) requestAppointment.get("idAppointment");
         String isCancel = (String)adapter.get("schedulemanager/cancelappointment/"+id);
         //boolean dateIsCanceled = (Boolean) adapter.get("schedulemanager/cancelappointment/"+id);
-        //System.out.println("Debug: date=" + dateIsCanceled);
         //assertEquals(dateIsCanceled, true);
         assertEquals(isCancel, "true");
     }
