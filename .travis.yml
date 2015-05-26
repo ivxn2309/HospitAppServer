@@ -17,7 +17,8 @@ before_script:
   - export CLASSPATH=lib/junit-4.11.jar:lib/hamcrest-core-1.3.jar:lib/json-simple-1.1.1.jar:src/:bin/:lib/
   - export PATH=/opt/glassfish4/bin/:$PATH
   - sudo chmod +x /opt/glassfish4/bin/asadmin
-  - cd /opt/glassfish4/bin/
+  - sudo cp password.txt /opt/dev/apps/passfile.txt
+  - cd /opt/glassfish4/bin/ 
   - sudo ./asadmin start-domain
   - sudo ./asadmin create-jdbc-connection-pool --user admin --passwordfile=/opt/dev/apps/passfile.txt --host localhost --port 4747 --datasourceclassname org.apache.derby.jdbc.ClientDataSource --restype javax.sql.XADataSource --property portNumber=3306:password=h0sp1t4pp2015:user=hospitapp_admin:serverName=localhost:databaseName=hospitapp:create=true mysql_hospitapp_hospitapp_adminPool
   - sudo ./asadmin create-jdbc-resource --user admin --port 4747 --host localhost --passwordfile=/opt/dev/apps/passfile.txt --connectionpoolid mysql_hospitapp_hospitapp_adminPool jdbc/hospitapp_jndi
