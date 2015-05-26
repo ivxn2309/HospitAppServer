@@ -20,8 +20,8 @@ before_script:
   - cd /opt/glassfish4/bin/ 
   - sudo ./asadmin start-domain
   #- sudo ./asadmin create-jdbc-connection-pool --user admin --passwordfile=/home/travis/build/ivxn2309/HospitAppServer/password.txt --host localhost --port 4747 --datasourceclassname org.apache.derby.jdbc.ClientDataSource --restype javax.sql.XADataSource --property portNumber=3306:password=h0sp1t4pp2015:user=hospitapp_admin:serverName=localhost:databaseName=hospitapp:create=true mysql_hospitapp_hospitapp_adminPool
-  - sudo ./asadmin --user admin --passwordfile /home/travis/build/ivxn2309/HospitAppServer/password.txt --host localhost --port 4747 create-jdbc-connection-pool --property portNumber=3306:password=h0sp1t4pp2015:user=hospitapp_admin:serverName=localhost:databaseName=hospitapp:create=true mysql_hospitapp_hospitapp_adminPool
-  - sudo ./asadmin create-jdbc-resource --user admin --port 4747 --host localhost --passwordfile=/home/travis/build/ivxn2309/HospitAppServer/password.txt --connectionpoolid mysql_hospitapp_hospitapp_adminPool jdbc/hospitapp_jndi
+  - sudo ./asadmin --user admin --passwordfile /home/travis/build/ivxn2309/HospitAppServer/password.txt --host localhost --port 4848 create-jdbc-connection-pool --property portNumber=3306:password=h0sp1t4pp2015:user=hospitapp_admin:serverName=127.0.0.1:databaseName=hospitapp:create=true mysql_hospitapp_hospitapp_adminPool
+  - sudo ./asadmin create-jdbc-resource --user admin --port 4848 --host localhost --passwordfile=/home/travis/build/ivxn2309/HospitAppServer/password.txt --connectionpoolid mysql_hospitapp_hospitapp_adminPool jdbc/hospitapp_jndi
   - sudo ./asadmin deploy /home/travis/build/ivxn2309/HospitAppServer/dist/HospitAppServer.war
   - cd /home/travis/build/ivxn2309/HospitAppServer
   - mkdir bin  
