@@ -60,7 +60,7 @@ public class DoctorFacadeREST extends AbstractFacade<Doctor> {
 
     @GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json"})
     public Doctor find(@PathParam("id") String id) {
         return super.find(id);
     }
