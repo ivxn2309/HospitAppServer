@@ -61,8 +61,8 @@ public class PrivacyControl {
         }
         JSONObject doctor = (JSONObject)adapter.get("doctor/"+username);
         JSONObject admin = (JSONObject)adapter.get("admin/"+username);
-        if(doctor.isEmpty()) {
-            if(admin.isEmpty()) {
+        if(doctor==null || doctor.isEmpty()) {
+            if(admin == null || admin.isEmpty()) {
                 return -1;
             }
             else if(admin.get("password").equals(password)){
