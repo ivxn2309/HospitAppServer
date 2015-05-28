@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import multixsoft.hospitapp.utilities.IntervalFilter;
 import multixsoft.hospitapp.webservice.AdapterRest;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -73,7 +74,8 @@ public class DoctorManager {
         try{
                 
         	JSONObject scheduleObject = (JSONObject)new JSONParser().parse(sched);
-                String path = "schedule" + scheduleObject.get("idSchedule");
+                scheduleObject = parseInterval(scheduleObject);
+                String path = "schedule/" + scheduleObject.get("idSchedule");
         	JSONObject scheduleRequest = (JSONObject) adapter.get(path);
                 
         	if(scheduleRequest == null || scheduleRequest.isEmpty()){
@@ -81,10 +83,28 @@ public class DoctorManager {
                     adapter.post(path, scheduleObject.toJSONString());
                     return scheduleObject.get("idSchedule").toString();
         	}else{
-                    return null;
+                    path = "schedule/" + scheduleObject.get("idSchedule");
+                    adapter.put(path, scheduleObject.toJSONString());
+                    return scheduleObject.get("idSchedule").toString();
         	}
         }catch(org.json.simple.parser.ParseException e){
-               return null;
+             return null;
         }
+    }
+    
+    private JSONObject parseInterval(JSONObject obj) {
+        IntervalFilter filter = new IntervalFilter();
+        String monday = filter.getIntervalFromHours((String) obj.get("monday"));
+        String tuesday = filter.getIntervalFromHours((String) obj.get("tuesday"));
+        String wednesday = filter.getIntervalFromHours((String) obj.get("wednesday"));
+        String thursday = filter.getIntervalFromHours((String) obj.get("thursday"));
+        String friday = filter.getIntervalFromHours((String) obj.get("friday"));
+        
+        obj.put("monday", monday);
+        obj.put("tuesday", tuesday);
+        obj.put("wednesday", wednesday);
+        obj.put("thursday", thursday);
+        obj.put("friday", friday);
+        return obj;
     }
 }

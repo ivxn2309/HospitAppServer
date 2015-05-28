@@ -61,8 +61,10 @@ public class ScheduleManager {
          if(appointment.isEmpty()){
             return false;
         }
+        appointment.put("iscanceled", false);
+        adapter.put("appointment/" + id, appointment.toJSONString());
         appointment.put("iscanceled", true);
-        return adapter.put("appointment/" + appointment.get("idAppointment"), appointment.toJSONString());
+        return adapter.put("appointment/" + id, appointment.toJSONString());
     }
     
     @GET
@@ -73,8 +75,10 @@ public class ScheduleManager {
         if(appointment.isEmpty()){
             return false;
         }
+        appointment.put("isFinished", false);
+        adapter.put("appointment/" + id, appointment.toJSONString());
         appointment.put("isFinished", true);
-        return adapter.put("appointment/" + appointment.get("idAppointment"), appointment.toJSONString());
+        return adapter.put("appointment/" + id, appointment.toJSONString());
     }
     
     @GET
@@ -101,7 +105,7 @@ public class ScheduleManager {
         if(patientAppointments.isEmpty()){
             return null;
         }
-        JSONObject nextAppointment = compareAppointmentsDate(patientAppointments);
+        JSONArray nextAppointment = compareAppointmentsDate(patientAppointments);
         return nextAppointment.toJSONString();
     }
     
@@ -139,7 +143,8 @@ public class ScheduleManager {
     }
     
     
-    private JSONObject compareAppointmentsDate(JSONArray appointments){
+    private JSONArray compareAppointmentsDate(JSONArray appointments){
+        /*
         JSONObject nextAppointment = (JSONObject) appointments.get(0);
         JSONObject actualApp;
         
@@ -153,6 +158,17 @@ public class ScheduleManager {
            }
         }
         return nextAppointment;
+        */
+        JSONArray nextAppointments = new JSONArray();
+        Date actualApp = new Date();
+        
+        for(int i=0; i<appointments.size(); i++){
+            Date nextAppDate  = getAppointmentDate((JSONObject)appointments.get(i));
+            if(nextAppDate.isAfter(actualApp)){
+                nextAppointments.add(appointments.get(i));
+            }
+        }
+        return nextAppointments;
     }
     
     private boolean putScheduleByDay(int day, String interval, JSONObject doctorSchedule){
