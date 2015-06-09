@@ -5,6 +5,7 @@
  */
 package multixsoft.hospitapp.webservice;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -97,6 +98,25 @@ public class AppointmentFacadeREST extends AbstractFacade<Appointment> {
         String sql = "SELECT a FROM Appointment a WHERE a.doctorUsername.username = :usrn AND a.date = :fecha";
         Query query = getEntityManager().createQuery(sql).setParameter("usrn", usrn).setParameter("fecha", fecha.getTime());
         List<Appointment> apps = query.getResultList();
+        return apps;
+    }
+    
+    @GET
+    @Path("/appointmentsdoctor")
+    @Produces("application/json")
+    public List<Appointment> getAllAppointmentsFor(@QueryParam("username") String usrn) {
+        //String sql = "SELECT a FROM Appointment a WHERE a.doctorUsername.username = :usrn";
+        //Query query = getEntityManager().createQuery(sql).setParameter("usrn", usrn);
+        //List<Appointment> apps = query.getResultList();
+        List<Appointment> all = this.findAll();
+        List<Appointment> apps = new ArrayList<>();
+        for(Appointment a : all){
+            if(a.getDoctorUsername().getUsername().equals(usrn)) {
+                apps.add(a);
+            }
+        }
+        
+        
         return apps;
     }
 

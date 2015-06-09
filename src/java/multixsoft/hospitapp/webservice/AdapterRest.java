@@ -87,7 +87,7 @@ public class AdapterRest {
 
             int codigo = conn.getResponseCode();
             //System.out.println("Codigo recibido" + codigo);
-            if (codigo / 100 != 2) {
+            if (codigo / 100 == 2) {
                 //System.out.println("Error en Codigo recibido" + codigo);
                 return true;
             }

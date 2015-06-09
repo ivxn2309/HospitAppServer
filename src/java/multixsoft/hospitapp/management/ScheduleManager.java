@@ -52,6 +52,19 @@ public class ScheduleManager {
         }
         return array.toJSONString();
     }
+    
+    @GET
+    @Path("/appointmentsdoctor")
+    @Produces("application/json")
+    public String getAllAppointmentsFor(@QueryParam("username") String usrn) {
+        AdapterRest adapter = new AdapterRest();
+        String path = "appointment/appointmentsdoctor?username=" + usrn;
+        JSONArray array = (JSONArray)adapter.get(path);
+        if (array.isEmpty()) {
+            return null;
+        }
+        return array.toJSONString();
+    }
 
     @GET
     @Path("/cancelappointment")
@@ -90,9 +103,10 @@ public class ScheduleManager {
             return -1;
         }
         else {
-            adapter.post("appointment", appointmentToSchedule.toJSONString());
-            return (Long) appointmentToSchedule.get("idAppointment");
+            if (adapter.post("appointment", appointmentToSchedule.toJSONString()))
+                return (Long) appointmentToSchedule.get("idAppointment");
         }
+        return -1;
     }
              
     @GET
@@ -206,13 +220,20 @@ public class ScheduleManager {
     }
     
     private boolean isAppointmentValid(JSONObject appointment){
+        Date actualDate = new Date();
+        Date appointmentDate = getAppointmentDate(appointment);
         String idAppointment = appointment.get("idAppointment").toString();
         boolean appointmentAlreadyExists = comparePatientAndDate(idAppointment);
-        if(!patientDoctorExists(appointment)) {
+        if((!patientDoctorExists(appointment)) 
+                || appointmentDate.isBefore(actualDate)
+                || appointmentAlreadyExists){
             return false;
         }
-        return appointmentAlreadyExists;
+        else{
+            return true;
+        }
     }
+
     
     private boolean patientDoctorExists(JSONObject appointment){
         JSONObject doctor = (JSONObject)appointment.get("doctorUsername");
