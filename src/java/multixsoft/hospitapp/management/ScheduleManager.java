@@ -99,11 +99,11 @@ public class ScheduleManager {
     @Produces("text/plain")
     public long scheduleAppointment(@QueryParam("Appointment") String appointment){
         JSONObject appointmentToSchedule = (JSONObject) JSONValue.parse(appointment);
-        if(isAppointmentValid(appointmentToSchedule)) {
+        if(isAppointmentValid(appointmentToSchedule) == false) {
             return -1;
         }
         else {
-            if (adapter.post("appointment", appointmentToSchedule.toJSONString()))
+           if (adapter.post("appointment", appointmentToSchedule.toJSONString()))
                 return (Long) appointmentToSchedule.get("idAppointment");
         }
         return -1;
@@ -132,25 +132,25 @@ public class ScheduleManager {
         if(doctor.isEmpty()){
             return null;
         }
-        
+
         JSONObject doctorSchedule = getDoctorSchedule(usr);
         if(original){
             return doctorSchedule.toJSONString();
         }
 
-        JSONArray doctorAppointments = getDoctorAppointments(usr);
-  
+        JSONArray doctorAppointments = getDoctorAppointments(usr);    
+
         IntervalFilter intervalFilter = new IntervalFilter();
-        
+
         for(Object appointment : doctorAppointments){
             Date appDate = getAppointmentDate((JSONObject)appointment);
-            
+
             if(appDate.belongsThisWeek()){
                 int day = appDate.getDayOfWeek();
                 int appointmentTime = Integer.parseInt((String) ((JSONObject)appointment).get("time"));
-                String scheduleTime = scheduleIntervalByDay(doctorSchedule.get("idSchedule").toString(), day);
+                String scheduleTime = scheduleIntervalByDay(doctorSchedule.toJSONString(), day);
                 String newInterval = intervalFilter.removeInterval(appointmentTime, scheduleTime);
-                putScheduleByDay(day, newInterval, doctorSchedule);
+               doctorSchedule = putScheduleByDay(day, newInterval, doctorSchedule);
             }
         }
         return doctorSchedule.toJSONString();
@@ -158,48 +158,31 @@ public class ScheduleManager {
     
     
     private JSONArray compareAppointmentsDate(JSONArray appointments){
-        /*
-        JSONObject nextAppointment = (JSONObject) appointments.get(0);
-        JSONObject actualApp;
-        
-        for(Object app: appointments){
-            actualApp = (JSONObject) app;
-            Date appDate = getAppointmentDate(actualApp);
-            Date nextAppDate = getAppointmentDate(nextAppointment);
-            
-           if(appDate.isBefore(nextAppDate)){
-               nextAppointment = actualApp;
-           }
-        }
-        return nextAppointment;
-        */
         JSONArray nextAppointments = new JSONArray();
         Date actualApp = new Date();
         
         for(int i=0; i<appointments.size(); i++){
             Date nextAppDate  = getAppointmentDate((JSONObject)appointments.get(i));
-            if(nextAppDate.isAfter(actualApp)){
+            if(nextAppDate.isAfter(actualApp) || nextAppDate.equals(actualApp)){
                 nextAppointments.add(appointments.get(i));
             }
         }
         return nextAppointments;
     }
     
-    private boolean putScheduleByDay(int day, String interval, JSONObject doctorSchedule){
-        if (day == 2) {
+    private JSONObject putScheduleByDay(int day, String interval, JSONObject doctorSchedule){
+        if (day == 2 && doctorSchedule.get("monday")!= null) {
             doctorSchedule.put("monday", interval);
-        } else if (day == 3) {
+        } else if (day == 3 && doctorSchedule.get("tuesday")!= null) {
             doctorSchedule.put("tuesday", interval);
-        } else if (day == 4) {
+        } else if (day == 4 && doctorSchedule.get("wednesday")!= null) {
             doctorSchedule.put("wednesday", interval);
-        } else if (day == 5) {
+        } else if (day == 5 && doctorSchedule.get("thursday")!= null) {
             doctorSchedule.put("thursday", interval);
-        } else if (day == 6) {
+        } else if (day == 6 && doctorSchedule.get("friday")!= null) {
             doctorSchedule.put("friday", interval);
-        }else{ 
-            return false;
         }
-        return true;
+            return (JSONObject)doctorSchedule;    
     }
     
     private String scheduleIntervalByDay(String idSchedule,  int day){
@@ -223,7 +206,7 @@ public class ScheduleManager {
         Date actualDate = new Date();
         Date appointmentDate = getAppointmentDate(appointment);
         String idAppointment = appointment.get("idAppointment").toString();
-        boolean appointmentAlreadyExists = comparePatientAndDate(idAppointment);
+        boolean appointmentAlreadyExists = comparePatientAndDate(appointment);
         if((!patientDoctorExists(appointment)) 
                 || appointmentDate.isBefore(actualDate)
                 || appointmentAlreadyExists){
@@ -280,15 +263,18 @@ public class ScheduleManager {
     
     
      /* compara si dos appointments tienen el mismo paciente y fecha */
-    private boolean comparePatientAndDate(String id){
-       JSONObject appointment =  getAppointmentFromId(id);
-       if(appointment == null) {
+    private boolean comparePatientAndDate(JSONObject appointment){
+      if(appointment == null) {
            return false;
        }
        JSONArray appointments = (JSONArray)adapter.get("appointment");
        for (Object app: appointments ){
-            if(((JSONObject)app).get("patientNss").equals(appointment.get("patientNss")) 
+          if(((JSONObject)app).get("patientNss").equals(appointment.get("patientNss")) 
                      && ((JSONObject)app).get("date").equals(appointment.get("date"))){
+                if(Boolean.valueOf(((JSONObject)app).get("iscanceled").toString()) == true){
+                    return false;
+                }
+                
                  return true;
             }
         }
